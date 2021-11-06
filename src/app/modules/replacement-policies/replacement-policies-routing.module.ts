@@ -14,7 +14,7 @@ const routes: Routes = [
     component: LruComponent
   },
   {
-    path:'fifo',
+    path:'random',
     component: RandomComponent
   },
 ];
