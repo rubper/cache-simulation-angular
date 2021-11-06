@@ -7,6 +7,9 @@ import { AssociativeComponent } from './pages/associative/associative.component'
 import { SetAssociativeComponent } from './pages/set-associative/set-associative.component';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 
 //Módulo para las políticas de ubicacion
 @NgModule({
@@ -19,6 +22,9 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MappingPoliciesRoutingModule,
     MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCardModule,
   ]
 })
 export class MappingPoliciesModule { }

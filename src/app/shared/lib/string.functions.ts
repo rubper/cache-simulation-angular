@@ -10,5 +10,8 @@ export class StringFn {
     return value
       .replace(/(?:^\w|[A-Z]|\b\w)/g, (leftTrim) => leftTrim.toUpperCase())
       .replace(/[\s]*[-]*/g, '');
+  }  
+  static isString(object: any): boolean {
+    return typeof object === 'string' ? true : false;
   }
 }

@@ -33,7 +33,7 @@ export class DirectComponent implements OnInit {
     anime.timeline()
     .add({
       targets: '#obj1',
-      translateX: this.movementToggle? 250 : 0,
+      translateY: this.movementToggle? '75%' : 0,
     } as anime.AnimeParams)
   }
 

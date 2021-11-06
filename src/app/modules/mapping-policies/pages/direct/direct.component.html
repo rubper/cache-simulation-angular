@@ -1,4 +1,29 @@
-<div id="obj1"></div>
-<input #memoryAddrSize (change)="setMemoryAddrSize($event)">
-<input #cacheSize (change)="setCacheAddrSize($event)">
-<button class="m-8" mat-button-flat (click)="sendHandler($event)">Toggle movement</button>
+<div class="container">
+  <div id="obj1"></div>
+</div>
+<br />
+<mat-card>
+  <form>
+    <div>
+      <mat-form-field>
+        <mat-label>Memory Size</mat-label>
+        <input matInput #memoryAddrSize (change)="setMemoryAddrSize($event)" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Cache Size</mat-label>
+        <input matInput #cacheSize (change)="setCacheAddrSize($event)" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Word Size</mat-label>
+        <input matInput #wordSize (change)="setCacheAddrSize($event)" />
+      </mat-form-field>
+    </div>
+    <button mat-button-flat class="m-8" (click)="sendHandler($event)">
+      Toggle movement
+    </button>
+  </form>
+</mat-card>
