@@ -3,5 +3,6 @@ import { Policy } from "./policy.model";
 
 export interface PolicyGroup {
   name: PolicyType;
+  DisplayName: string;
   policies: Policy[];
 }

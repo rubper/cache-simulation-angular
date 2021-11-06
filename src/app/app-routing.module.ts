@@ -12,19 +12,19 @@ const routes: Routes = [
         loadChildren: () => import('@modules/landing/landing.module').then(m=>m.LandingModule),
       },
       {
-        path: 'extraccion',
+        path: 'fetching',
         loadChildren: () => import('@modules/fetching-policies/fetching-policies.module').then(m=>m.FetchingPoliciesModule),
       },
       {
-        path: 'actualizacion',
+        path: 'writing',
         loadChildren: () => import('@modules/writing-policies/writing-policies.module').then(m=>m.WritingPoliciesModule),
       },
       {
-        path: 'remplazo',
+        path: 'replacement',
         loadChildren: () => import('@modules/replacement-policies/replacement-policies.module').then(m=>m.ReplacementPoliciesModule),
       },
       {
-        path: 'ubicacion',
+        path: 'mapping',
         loadChildren: () => import('@modules/mapping-policies/mapping-policies.module').then(m=>m.MappingPoliciesModule),
       },
     ]

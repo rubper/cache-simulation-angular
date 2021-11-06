@@ -10,6 +10,7 @@
         py-6
         md:justify-start md:space-x-10
       "
+      (click)="outterClickHandler()"
     >
       <div class="flex justify-start lg:w-0 lg:flex-1">
         <a [routerLink]="['/']">
@@ -23,7 +24,10 @@
       </div>
       <nav class="hidden md:flex space-x-10">
         <ng-container *ngFor="let group of policies">
-          <acs-header-menu [policyGroup]="group" (hasBeenClicked)="clickHandler($event)"></acs-header-menu>
+          <acs-header-menu
+            [policyGroup]="group"
+            (hasBeenClicked)="clickHandler($event, group)"
+          ></acs-header-menu>
         </ng-container>
       </nav>
     </div>
@@ -304,7 +308,10 @@
           </a>
           <p class="mt-6 text-center text-base font-medium text-gray-500">
             Existing customer?
-            <a [routerLink]="['/']" class="text-indigo-600 hover:text-indigo-500">
+            <a
+              [routerLink]="['/']"
+              class="text-indigo-600 hover:text-indigo-500"
+            >
               Sign in
             </a>
           </p>

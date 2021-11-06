@@ -9,10 +9,10 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class BaseLayoutComponent {
   @ViewChild('header') header!: HeaderComponent;
-  outterClick = new BehaviorSubject<boolean>(false);
   constructor() { }
 
   closeHandler(): void {
+    this.header.outterClickHandler();
   }
 
 }
