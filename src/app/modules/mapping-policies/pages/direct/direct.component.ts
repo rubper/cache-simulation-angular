@@ -16,7 +16,8 @@ export class DirectComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  sendHandler($event: any) {
+  onSubmit($event: any) {
+    $event.preventDefault(); $event.stopPropagation();
     this.movementToggle = this.movementToggle ? false : true;
     this.animate();
   }
@@ -33,7 +34,7 @@ export class DirectComponent implements OnInit {
     anime.timeline()
     .add({
       targets: '#obj1',
-      translateY: this.movementToggle? '75%' : 0,
+      translateX: this.movementToggle? '75%' : 0,
     } as anime.AnimeParams)
   }
 

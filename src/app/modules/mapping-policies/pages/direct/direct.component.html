@@ -1,9 +1,9 @@
-<div class="container">
+<mat-card>
+    <div class="container">
   <div id="obj1"></div>
 </div>
 <br />
-<mat-card>
-  <form>
+  <form (submit)="onSubmit($event)" class="m-auto">
     <div>
       <mat-form-field>
         <mat-label>Memory Size</mat-label>
@@ -22,7 +22,7 @@
         <input matInput #wordSize (change)="setCacheAddrSize($event)" />
       </mat-form-field>
     </div>
-    <button mat-button-flat class="m-8" (click)="sendHandler($event)">
+    <button mat-button-flat class="m-8" >
       Toggle movement
     </button>
   </form>
