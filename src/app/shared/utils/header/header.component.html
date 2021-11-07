@@ -1,18 +1,18 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <div class="relative" [ngClass]="theme.background">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+  <div class="max-w-full mx-auto px-4 sm:px-6">
     <div
       class="
         flex
-        justify-between
+        justify-around
         items-center
         border-b-2 border-gray-100
         py-6
-        md:justify-start md:space-x-10
+        md:space-x-10
       "
       (click)="outterClickHandler()"
     >
-      <div class="flex justify-start lg:w-0 lg:flex-1">
+      <div class="flex justify-start">
         <a [routerLink]="['/']">
           <span class="sr-only">Workflow</span>
           <img
