@@ -16,31 +16,31 @@
           <mat-form-field>
             <input
               type="number"
-              placeholder="Ancho de memoria"
+              placeholder="Ancho de memoria principal"
               aria-label="Number"
               formControlName="memSize"
+              #memSize
+              (change)="setMemoryAddrSize(memSize)"
               matInput
               [matAutocomplete]="auto"
             />
             <ng-container *ngIf="MemorySize.invalid">
-              <mat-error *ngIf="MemorySize.errors?.notIncluded">{{MemorySize.errors?.notIncluded?.message}}</mat-error>
+              <mat-error *ngIf="MemorySize.errors?.notIncluded">{{
+                MemorySize.errors?.notIncluded?.message
+              }}</mat-error>
             </ng-container>
           </mat-form-field>
           bits
           <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let option of bitsArray" [value]="option">
-              {{ option }}
+            <mat-option
+              *ngFor="let bits of bitsArray"
+              [value]="bits"
+            >
+              {{ bits }}
             </mat-option>
           </mat-autocomplete>
-          <mat-form-field>
-            <mat-label>Memory Size</mat-label>
-            <input
-              matInput
-              #memoryAddrSize
-              autocomplete="off"
-              (change)="setMemoryAddrSize(memoryAddrSize)"
-            />
-          </mat-form-field>
+          <br>
+          Maximo direccionable: {{MemoryAddr?.readable}} {{MemoryAddr?.unit}}
         </div>
         <div>
           <mat-form-field>
@@ -52,6 +52,8 @@
               autocomplete="off"
             />
           </mat-form-field>
+          <br>
+          Maximo cache: {{CacheSize?.readable}} {{CacheSize?.unit}}
         </div>
         <div>
           <mat-form-field>
@@ -64,7 +66,9 @@
             />
           </mat-form-field>
         </div>
-        <button mat-button-flat class="m-8" [disabled]="formGroup.invalid">Run animation</button>
+        <button mat-button-flat class="m-8" [disabled]="formGroup.invalid">
+          Run animation
+        </button>
       </form>
     </div>
   </div>
