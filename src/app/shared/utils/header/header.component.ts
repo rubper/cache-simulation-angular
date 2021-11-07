@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { BaseComponent } from '@shared/utils/base.component';
 import { PolicyGroup } from '@shared/models/policy-group.model';
 import {cachePolicies} from './header.constant';
 import { HeaderService } from './header.service';
@@ -8,11 +9,13 @@ import { HeaderService } from './header.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent extends BaseComponent implements OnInit {
   policies = cachePolicies;
   constructor(
     private readonly headerService: HeaderService
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
   }

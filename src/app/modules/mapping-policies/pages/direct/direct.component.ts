@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { BaseComponent } from '@shared/utils/base.component';
 declare var anime: any;
 
 @Component({
@@ -6,12 +7,14 @@ declare var anime: any;
   templateUrl: './direct.component.html',
   styleUrls: ['./direct.component.css']
 })
-export class DirectComponent implements OnInit {
+export class DirectComponent extends BaseComponent implements OnInit {
   @ViewChild('memoryAddrSize') memoryAddrSize: Input | undefined;
   @ViewChild('cacheSize') cacheSize: Input | undefined;
   movementToggle: boolean = false;
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit(): void {
   }

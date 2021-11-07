@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, Output, AfterViewInit, ChangeDetectorRef, ɵ_sanitizeHtml, SecurityContext } from '@angular/core';
+import { Component, EventEmitter, Input, Output, AfterViewInit, ChangeDetectorRef, SecurityContext } from '@angular/core';
 import { PolicyGroup } from '@shared/models/policy-group.model';
 import { HeaderService } from '@shared/utils/header/header.service';
 import { BehaviorSubject } from 'rxjs';
 import { IconType } from '@shared/types/icon.type';
 import { DomSanitizer } from '@angular/platform-browser';
-import { StringFn } from './../../lib/string.functions';
+import { StringFn } from '@shared/lib/string.functions';
+import { BaseComponent } from '@shared/utils/base.component';
 
 @Component({
   selector: 'acs-header-menu',
   templateUrl: './header-menu.component.html',
   styleUrls: ['./header-menu.component.css'],
 })
-export class HeaderMenuComponent implements AfterViewInit {
+export class HeaderMenuComponent extends BaseComponent implements AfterViewInit {
   visible: boolean = false;
   subject?: BehaviorSubject<boolean>;
   @Input()
@@ -33,7 +34,9 @@ export class HeaderMenuComponent implements AfterViewInit {
     private readonly headerService: HeaderService,
     private readonly cdr: ChangeDetectorRef,
     private readonly domSanitizer: DomSanitizer,
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.cdr.detectChanges();

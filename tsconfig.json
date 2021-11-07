@@ -24,6 +24,7 @@
       "@modules/*": ["src/app/modules/*"],
       "@layouts/*": ["src/app/layouts/*"],
       "@shared/*": ["src/app/shared/*"],
+      "@themes/*": ["src/app/themes/*"],
     }
   },
   "angularCompilerOptions": {
