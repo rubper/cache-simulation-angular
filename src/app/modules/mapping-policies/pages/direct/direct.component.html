@@ -1,7 +1,8 @@
 <mat-card [ngClass]="theme.background">
   <div class="flex flex-row">
     <div class="flex-auto w-3/4 h-full">
-      <div id="obj1"></div>
+      <div id="memory" [ngClass]="theme.main" #memory></div>
+      <div id="cache" [ngClass]="theme.accent" #cache [ngStyle]="{'left': memory.offsetWidth}"></div>
     </div>
 
     <div class="flex-auto w-1/4">
@@ -12,23 +13,34 @@
             <input
               matInput
               #memoryAddrSize
-              (change)="setMemoryAddrSize($event)"
+              autocomplete="off"
+              (change)="setMemoryAddrSize(memoryAddrSize)"
             />
           </mat-form-field>
         </div>
         <div>
           <mat-form-field>
             <mat-label>Cache Size</mat-label>
-            <input matInput #cacheSize (change)="setCacheAddrSize($event)" />
+            <input
+              matInput
+              #cacheSize
+              (change)="setCacheAddrSize(cacheSize)"
+              autocomplete="off"
+            />
           </mat-form-field>
         </div>
         <div>
           <mat-form-field>
             <mat-label>Word Size</mat-label>
-            <input matInput #wordSize (change)="setCacheAddrSize($event)" />
+            <input
+              matInput
+              #wordSize
+              (change)="setCacheAddrSize(wordSize)"
+              autocomplete="off"
+            />
           </mat-form-field>
         </div>
-        <button mat-button-flat class="m-8">Toggle movement</button>
+        <button mat-button-flat class="m-8">Run animation</button>
       </form>
     </div>
   </div>
