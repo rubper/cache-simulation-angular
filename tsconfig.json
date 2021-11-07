@@ -16,11 +16,14 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "es2018",
       "dom"
     ],
     "paths": {
+      "@animations/*": ["src/app/animations/*"],
       "@modules/*": ["src/app/modules/*"],
       "@layouts/*": ["src/app/layouts/*"],
       "@shared/*": ["src/app/shared/*"],

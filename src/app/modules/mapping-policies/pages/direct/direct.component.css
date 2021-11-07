@@ -1,7 +1,13 @@
-#obj1 {
+#memory {
   width: 100px;
   height: 100px;
-  background: red;
+  position: absolute;
+  opacity: 1;
+}
+
+#cache {
+  width: 100px;
+  height: 100px;
   position: absolute;
   opacity: 1;
 }
