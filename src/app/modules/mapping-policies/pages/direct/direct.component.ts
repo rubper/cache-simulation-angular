@@ -1,7 +1,9 @@
 import { Component, ViewChild, Input, AfterViewInit, ElementRef } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Position } from '@shared/types/position.type';
 import { BaseComponent } from '@shared/utils/base.component';
 import { AnimeService } from 'src/app/animations/anime.service';
+import { BitsValidator } from './../../utils/validators/bits.validator';
 declare var anime: any;
 
 @Component({
@@ -12,19 +14,21 @@ declare var anime: any;
 export class DirectComponent extends BaseComponent implements AfterViewInit {
   @ViewChild('memory') memoryBlock: ElementRef | undefined;
   @ViewChild('cache') cacheBlock: ElementRef | undefined;
-  @ViewChild('memoryAddrSize') memoryAddrSize: Input | undefined;
-  @ViewChild('cacheSize') cacheSize: Input | undefined;
   memoryInitialPosition?: Position;
-  movementToggle: boolean = false;
+  formGroup: FormGroup;
   bitsArray: number[] = [];
 
   constructor(
-    private readonly animeService: AnimeService
+    private readonly animeService: AnimeService,
+    private readonly formBuilder: FormBuilder
   ) {
     super();
     for (let i = 1; i <= 5; i++) {
       this.bitsArray.push(Math.pow(2, i));      
     }
+    this.formGroup = this.formBuilder.group({
+      'memSize': [null, [Validators.required, BitsValidator(this.bitsArray)]],
+    })
   }
 
   ngAfterViewInit(): void {
@@ -35,6 +39,8 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
 
   onSubmit($event: any) {
     $event.preventDefault(); $event.stopPropagation();
+    console.log(this.MemorySize.value);
+    
     //this.animate();
     this.animeService.move('#memory', 100, 0);
     this.animeService.move('#cache', -200, 0);
@@ -49,19 +55,15 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
   setWordSize(elementRef: HTMLInputElement) {
   }
 
-  animate() {
-    anime.timeline()
-    .add({
-      targets: '#memory',
-      translateX: this.movementToggle? '100px' : 0,
-    } as anime.AnimeParams)
-  }
-
   get MemoryBlock(): HTMLElement {
     return this.memoryBlock?.nativeElement as HTMLElement || new HTMLElement();
   }
   
   get CacheBlock(): HTMLElement {
     return this.cacheBlock?.nativeElement as HTMLElement || new HTMLElement();
+  }
+
+  get MemorySize() {
+    return this.formGroup.get('memSize') as FormControl || new FormControl();
   }
 }

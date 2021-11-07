@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ReactiveFormsModule } from '@angular/forms';
 
 //Módulo para las políticas de ubicacion
 @NgModule({
@@ -22,11 +23,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
   imports: [
     CommonModule,
     MappingPoliciesRoutingModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
   ]
 })
 export class MappingPoliciesModule { }
