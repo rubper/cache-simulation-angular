@@ -1,5 +1,7 @@
 import { Component, ViewChild, Input, AfterViewInit, ElementRef } from '@angular/core';
+import { Position } from '@shared/types/position.type';
 import { BaseComponent } from '@shared/utils/base.component';
+import { AnimeService } from 'src/app/animations/anime.service';
 declare var anime: any;
 
 @Component({
@@ -12,20 +14,30 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
   @ViewChild('cache') cacheBlock: ElementRef | undefined;
   @ViewChild('memoryAddrSize') memoryAddrSize: Input | undefined;
   @ViewChild('cacheSize') cacheSize: Input | undefined;
+  memoryInitialPosition?: Position;
   movementToggle: boolean = false;
+  bitsArray: number[] = [];
 
-  constructor() {
+  constructor(
+    private readonly animeService: AnimeService
+  ) {
     super();
+    for (let i = 1; i <= 5; i++) {
+      this.bitsArray.push(Math.pow(2, i));      
+    }
   }
 
   ngAfterViewInit(): void {
-    this.CacheBlock.style.left = `${this.MemoryBlock.offsetWidth + 100}px`;
+    this.memoryInitialPosition = {
+      left: `${this.MemoryBlock.offsetWidth + 100}px`,
+    }
   }
 
   onSubmit($event: any) {
     $event.preventDefault(); $event.stopPropagation();
-    this.movementToggle = this.movementToggle ? false : true;
-    this.animate();
+    //this.animate();
+    this.animeService.move('#memory', 100, 0);
+    this.animeService.move('#cache', -200, 0);
   }
 
   setMemoryAddrSize(elementRef: HTMLInputElement) {
@@ -42,33 +54,6 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
     .add({
       targets: '#memory',
       translateX: this.movementToggle? '100px' : 0,
-    } as anime.AnimeParams)
-  }
-
-  scaleX(target: string, value: number) {
-    anime.timeline()
-    .add({
-      targets: target,
-      scaleX: value,
-    } as anime.AnimeParams)
-  }
-
-  
-  scaleY(target: string, value: number) {
-    anime.timeline()
-    .add({
-      targets: target,
-      scaleY: value,
-    } as anime.AnimeParams)
-  }
-
-  
-  scale(target: string, x: number, y: number) {
-    anime.timeline()
-    .add({
-      targets: target,
-      scaleX: x,
-      scaleY: y,
     } as anime.AnimeParams)
   }
 

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import * as anime from 'animejs';
 
 @Component({
   selector: 'acs-associative',
@@ -14,9 +13,6 @@ export class AssociativeComponent implements OnInit {
   }
 
   clickHandler() {
-    anime({
-      targets: ""
-    } as anime.AnimeParams)
   }
 
 }

@@ -1,8 +1,23 @@
+<input type="text"
+       placeholder="Pick one"
+       aria-label="Number"
+       matInput
+       [matAutocomplete]="auto">
 <mat-card [ngClass]="theme.background">
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of bitsArray" [value]="option">
+      {{option}}
+    </mat-option>
+  </mat-autocomplete>
   <div class="flex flex-row">
     <div class="flex-auto w-3/4 h-full">
       <div id="memory" [ngClass]="theme.main" #memory></div>
-      <div id="cache" [ngClass]="theme.accent" #cache [ngStyle]="{'left': memory.offsetWidth}"></div>
+      <div
+        id="cache"
+        [ngClass]="theme.accent"
+        #cache
+        [ngStyle]="memoryInitialPosition ? memoryInitialPosition : {}"
+      ></div>
     </div>
 
     <div class="flex-auto w-1/4">
