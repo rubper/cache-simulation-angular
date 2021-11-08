@@ -1,7 +1,6 @@
 import {
   Component,
   ViewChild,
-  Input,
   AfterViewInit,
   ElementRef,
 } from '@angular/core';
@@ -12,12 +11,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
-import { ByteUnit } from '@modules/mapping-policies/utils/types/byte-unit.type';
+import { ByteUnit, ByteUnits, UnitsDict } from '@modules/mapping-policies/utils/types/byte-unit.type';
 import { MathFn } from '@shared/lib/math.functions';
 import { Position } from '@shared/types/position.type';
 import { BaseComponent } from '@shared/utils/base.component';
 import { AnimeService } from 'src/app/animations/anime.service';
-import { BitsValidator } from './../../utils/validators/bits.validator';
 declare var anime: any;
 
 @Component({
@@ -26,57 +24,60 @@ declare var anime: any;
   styleUrls: ['./direct.component.css'],
 })
 export class DirectComponent extends BaseComponent implements AfterViewInit {
-  @ViewChild('memory') memoryBlock: ElementRef | undefined;
-  @ViewChild('cache') cacheBlock: ElementRef | undefined;
-  MemoryAddr?: ByteUnit;
-  CacheSize?: ByteUnit;
-  memoryInitialPosition?: Position;
-  formGroup: FormGroup;
-  bitsArray: number[] = [];
-  maxAddr: ByteUnit[] = [];
-  maxCacheAddr: ByteUnit[] = [];
+  //handles configs for display elements
+  @ViewChild('memory') memoryDBlock: ElementRef | undefined;
+  @ViewChild('cache') cacheDBlock: ElementRef | undefined;
+  memoryDInitialPosition?: Position;
 
+  //handles data from config panel
+  MemoryAddrSize?: ByteUnit;
+  CacheSize?: ByteUnit;
+  WordSize?: ByteUnit;
+
+  //handles form
+  formGroup: FormGroup;
+  //handles suggestions shown in autocomplete
+  bitSuggestionSet: Set<number> = new Set([]);
+  //Byte units suggestions shown in autocomplete
+  ByteUnitsDict: Readonly<ByteUnits>[];
+  
   constructor(
     private readonly animeService: AnimeService,
     private readonly formBuilder: FormBuilder
   ) {
     super();
+    this.ByteUnitsDict = [...UnitsDict];
     for (let i = 1; i <= 5; i++) {
-      this.bitsArray.push(Math.pow(2, i));
+      this.bitSuggestionSet.add(Math.pow(2, i));
     }
-    this.bitsArray.push(10);
-    this.bitsArray.push(20);
-    this.bitsArray.push(30);
+    this.bitSuggestionSet.add(10);
+    this.bitSuggestionSet.add(20);
+    this.bitSuggestionSet.add(30);
     this.setMaxAddrArray();
-    console.log(this.maxAddr);
-
     
     this.formGroup = this.formBuilder.group({
-      memSize: [null, [Validators.required, ]],//BitsValidator(this.bitsArray)]],
-      cacheSize: [null, [Validators.required, ]],//BitsValidator(this.bitsArray)]],
+      memSize: [null, [Validators.required, ]],//BitsValidator(this.bitSuggestionSet)]],
+      cacheSize: [null, [Validators.required, ]],//BitsValidator(this.bitSuggestionSet)]],
+      wordSize: [8, [Validators.required, ]],
     });
+    const addr = Math.pow(2, 8);
+    this.WordSize = {
+      value: addr,
+      readable: MathFn.getLowestIntegerByte(addr),
+      unit: MathFn.getByteMultiple(addr), 
+    }
   }
 
   ngAfterViewInit(): void {
-    this.memoryInitialPosition = {
+    this.memoryDInitialPosition = {
       left: `${this.MemoryBlock.offsetWidth + 100}px`,
     };
   }
 
   setMaxAddrArray() {
     let addr;
-    this.bitsArray.forEach((num, index) => {
+    this.bitSuggestionSet.forEach((num, index) => {
       addr = Math.pow(2, num);      
-      this.maxAddr[index] = {
-        value: addr,
-        readable: MathFn.getLowestIntegerByte(addr),
-        unit: MathFn.getByteMultiple(addr),
-      };  
-      this.maxCacheAddr[index] = {
-        value: addr,
-        readable: MathFn.getLowestIntegerByte(addr),
-        unit: MathFn.getByteMultiple(addr),
-      };
     });
   }
 
@@ -90,19 +91,25 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
     this.animeService.move('#cache', -200, 0);
   }
 
-  setMemoryAddrSize(element: HTMLInputElement) {
-    this.bitsArray.push(+element.value);
-    this.setMaxAddrArray();
-    const addr = Math.pow(2, +element.value);
+  setMemoryAddrSize(element: HTMLInputElement | MatOption) {
+    const value = +element.value;
+    //CASE OF RECEIVING BITS
+    // this.bitSuggestionSet.add(+element.value);
+    // const addr = Math.pow(2, +element.value);
 
-    this.MemoryAddr = {
-      value: addr,
-      readable: MathFn.getLowestIntegerByte(addr),
-      unit: MathFn.getByteMultiple(addr), 
-    }
+    // this.MemoryAddrSize = {
+    //   value: addr,
+    //   readable: MathFn.getLowestIntegerByte(addr),
+    //   unit: MathFn.getByteMultiple(addr), 
+    // }
   }
 
-  setCacheAddrSize(elementRef: HTMLInputElement) {
+  setMemoryAddrTypeSize(element: HTMLInputElement | MatOption) {
+    const value = element.value as ByteUnits;
+
+  }
+
+  setCacheAddrSize(elementRef: HTMLInputElement | MatOption) {
     const addr = Math.pow(2, +elementRef.value);
     this.CacheSize = {
       value: addr,
@@ -111,16 +118,23 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
     }
   }
 
-  setWordSize(elementRef: HTMLInputElement) {}
+  setWordSize(elementRef: HTMLInputElement | MatOption) {
+    const addr = Math.pow(2, +elementRef.value);
+    this.WordSize = {
+      value: addr,
+      readable: MathFn.getLowestIntegerByte(addr),
+      unit: MathFn.getByteMultiple(addr), 
+    }
+  }
 
   get MemoryBlock(): HTMLElement {
     return (
-      (this.memoryBlock?.nativeElement as HTMLElement) || new HTMLElement()
+      (this.memoryDBlock?.nativeElement as HTMLElement) || new HTMLElement()
     );
   }
 
   get CacheBlock(): HTMLElement {
-    return (this.cacheBlock?.nativeElement as HTMLElement) || new HTMLElement();
+    return (this.cacheDBlock?.nativeElement as HTMLElement) || new HTMLElement();
   }
 
   get MemorySize() {
