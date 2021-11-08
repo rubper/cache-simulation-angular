@@ -39,7 +39,7 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
 
   // handles data from config panel
   MemoryAddrSize?: ByteUnit;
-  CacheSize?: ByteUnit;
+  CacheAddrSize?: ByteUnit;
   WordSize?: ByteUnit;
 
   // handles form
@@ -70,6 +70,7 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
       memSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
       memTypeSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
       cacheSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
+      cacheTypeSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
       wordSize: [8, [Validators.required]],
     });
 
@@ -87,79 +88,68 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
   onSubmit($event: any): void {
     $event.preventDefault();
     $event.stopPropagation();
-    console.log(this.MemorySize.value);
-
-    // this.animate();
-    this.animeService.move('#memory', 100, 0);
-    this.animeService.move('#cache', -200, 0);
+    // the animation to execute on submit
+    this.animeService.move('#memory', 100, 0); // moves #memory to x:100, y:0, from its ORIGINAL position
+    this.animeService.move('#cache', -200, 0); // moves #cache to x:-200, y:0, from its ORIGINAL position
   }
 
-  setMemoryAddrSize(element: HTMLInputElement | MatOption): void {
-    const value = +element.value;
+  setMemoryAddrSize(): void {
+    this.MemoryAddrSize = this.handleConversionOnChange(
+      this.MemorySize,
+      this.MemorySizeType
+    );
+  }
+
+  setCacheAddrSize(): void {
+    this.CacheAddrSize = this.handleConversionOnChange(
+      this.CacheSize,
+      this.CacheSizeType
+    );
+  }
+
+  handleConversionOnChange(
+    mainControl: AbstractControl,
+    unitControl: AbstractControl
+  ): ByteUnit {
+    const mainValue = mainControl.value;
+    let controlVar: ByteUnit = {
+      value: 0,
+    };
     if (this.bitsMode.getValue()) {
       // CASE OF RECEIVING BITS
-      this.bitSuggestionSet.add(value);
-      const addr = Math.pow(2, value);
+      this.bitSuggestionSet.add(mainValue);
+      const maxAddr = Math.pow(2, mainValue);
 
-      this.MemoryAddrSize = {
-        value: addr,
-        readable: MathFn.getLowestIntegerByte(addr),
-        unit: MathFn.getByteMultiple(addr),
-        bits: value,
+      controlVar = {
+        value: maxAddr,
+        readable: MathFn.getLowestIntegerByte(maxAddr),
+        unit: MathFn.getByteMultiple(maxAddr),
+        bits: Math.ceil(mainValue),
       };
     } else {
+      // CASE OF RECEIVING MAX ADDRESSABLE
       if (
-        !this.MemoryTypeSize.pristine &&
-        this.MemoryTypeSize.value &&
-        this.MemoryTypeSize.value !== ''
+        !unitControl.pristine &&
+        unitControl.value &&
+        unitControl.value !== ''
       ) {
         let bits = 0;
-        const units = this.MemoryTypeSize.value;
-        let multiplier = UnitsDict.findIndex((val: ByteUnits) => units === val);
-        multiplier = multiplier === -1 ? 0 : multiplier;
-        const totalUnits = value * Math.pow(1024, multiplier);
-        bits = Math.log2(totalUnits);
-        // CASE OF RECEIVING MAX ADDRESSABLE
-        this.MemoryAddrSize = {
-          value,
-          readable: MathFn.getLowestIntegerByte(value),
-          unit: MathFn.getByteMultiple(value),
-          bits,
-        };
+        const multiplier = UnitsDict.findIndex(
+          (byteUnits: ByteUnits) => unitControl.value === byteUnits
+        );
+        if (multiplier !== -1) {
+          const totalUnits = mainValue * Math.pow(1024, multiplier);
+          bits = Math.log2(totalUnits);
+          controlVar = {
+            value: mainValue,
+            readable: MathFn.getLowestIntegerByte(mainValue),
+            unit: unitControl.value,
+            bits: Math.ceil(bits),
+          };
+        }
       }
     }
-  }
-
-  setMemoryAddrTypeSize(element: HTMLInputElement | MatOption | MatAutocomplete): void {
-    const controlValue = this.MemoryTypeSize.value;
-    if (
-      !this.MemorySize.pristine &&
-      this.MemorySize.value &&
-      this.MemorySize.value !== ''
-    ) {
-      let bits = 0;
-      const units = controlValue;
-      let multiplier = UnitsDict.findIndex((val: ByteUnits) => units === val);
-      multiplier = multiplier === -1 ? 0 : multiplier;
-      const totalUnits = this.MemorySize.value * Math.pow(1024, multiplier);
-      bits = Math.log2(totalUnits);
-      // CASE OF RECEIVING MAX ADDRESSABLE
-      this.MemoryAddrSize = {
-        value: this.MemorySize.value,
-        readable: MathFn.getLowestIntegerByte(this.MemorySize.value),
-        unit: MathFn.getByteMultiple(this.MemorySize.value),
-        bits,
-      };
-    }
-  }
-
-  setCacheAddrSize(elementRef: HTMLInputElement | MatOption): void {
-    const addr = Math.pow(2, +elementRef.value);
-    this.CacheSize = {
-      value: addr,
-      readable: MathFn.getLowestIntegerByte(addr),
-      unit: MathFn.getByteMultiple(addr),
-    };
+    return controlVar;
   }
 
   setWordSize(elementRef: HTMLInputElement | MatOption): void {
@@ -168,6 +158,7 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
       value: addr,
       readable: MathFn.getLowestIntegerByte(addr),
       unit: MathFn.getByteMultiple(addr),
+      bits: elementRef.value,
     };
   }
 
@@ -177,26 +168,40 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
     } else {
       this.bitsMode.next(true);
     }
+    this.setMemoryAddrSize();
+    this.setCacheAddrSize();
   }
 
+  // gets Main Memory square's instance
   get MemoryBlock(): HTMLElement {
     return (
       (this.memoryDBlock?.nativeElement as HTMLElement) || new HTMLElement()
     );
   }
-
+  // gets Cache square's instance
   get CacheBlock(): HTMLElement {
     return (
       (this.cacheDBlock?.nativeElement as HTMLElement) || new HTMLElement()
     );
   }
-
+  // gets Main Memory form's controls
   get MemorySize(): AbstractControl {
     return (this.formGroup.get('memSize') as FormControl) || new FormControl();
   }
-  get MemoryTypeSize(): AbstractControl {
+  get MemorySizeType(): AbstractControl {
     return (
       (this.formGroup.get('memTypeSize') as FormControl) || new FormControl()
+    );
+  }
+  // gets Cache form's controls
+  get CacheSize(): AbstractControl {
+    return (
+      (this.formGroup.get('cacheSize') as FormControl) || new FormControl()
+    );
+  }
+  get CacheSizeType(): AbstractControl {
+    return (
+      (this.formGroup.get('cacheTypeSize') as FormControl) || new FormControl()
     );
   }
 }
