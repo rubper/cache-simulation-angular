@@ -2,6 +2,7 @@ export interface ByteUnit {
   value: number;
   readable?: number;
   unit?: ByteUnits;
+  bits?: number;
 }
 export type ByteUnits = 'B' | 'KB' | 'MB' | 'GB' | 'TB' | 'PB' | 'EB' | 'ZB' | 'YB' ;
 
