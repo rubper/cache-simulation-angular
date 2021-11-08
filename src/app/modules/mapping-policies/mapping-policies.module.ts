@@ -11,7 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 //Módulo para las políticas de ubicacion
 @NgModule({
@@ -23,11 +24,13 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     MappingPoliciesRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatSlideToggleModule,
     MatAutocompleteModule,
   ]
 })
