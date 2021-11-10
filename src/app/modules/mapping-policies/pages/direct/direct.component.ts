@@ -14,7 +14,7 @@ import {
 } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MainDialogComponent } from '@modules/mapping-policies/utils/components/main-dialog/main-dialog.component';
+import { MainDialogComponent } from '@modules/mapping-policies/utils/main-dialog/main-dialog.component';
 import {
   ByteUnit,
   ByteUnits,
