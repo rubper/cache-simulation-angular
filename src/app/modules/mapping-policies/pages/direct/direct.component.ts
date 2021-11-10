@@ -12,8 +12,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MatOption } from '@angular/material/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MainDialogComponent } from '@modules/mapping-policies/utils/components/main-dialog/main-dialog.component';
 import {
   ByteUnit,
   ByteUnits,
@@ -24,7 +25,6 @@ import { Position } from '@shared/types/position.type';
 import { BaseComponent } from '@shared/utils/base.component';
 import { BehaviorSubject } from 'rxjs';
 import { AnimeService } from 'src/app/animations/anime.service';
-declare var anime: any;
 
 @Component({
   selector: 'acs-direct',
@@ -50,10 +50,13 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
   ByteUnitsDict: Readonly<ByteUnits>[];
   // asks for bits instead of bytes in forms:
   bitsMode = new BehaviorSubject<boolean>(false);
+  // dialog reference
+  mainRef?: MatDialogRef<any>;
 
   constructor(
     private readonly animeService: AnimeService,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly matDialog: MatDialog
   ) {
     super();
     // set form items
@@ -172,6 +175,16 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
     this.setCacheAddrSize();
   }
 
+  clickHandler() {
+    this.mainRef = this.matDialog.open(MainDialogComponent, {
+      data: {
+        memory: this.MemoryAddrSize?.bits,
+        cache: this.CacheAddrSize?.bits,
+        blocksize: this.BlockSize.value,
+      },
+    });
+  }
+
   // gets Main Memory square's instance
   get MemoryBlock(): HTMLElement {
     return (
@@ -203,5 +216,9 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
     return (
       (this.formGroup.get('cacheTypeSize') as FormControl) || new FormControl()
     );
+  }
+  // gets Cache form's controls
+  get BlockSize(): AbstractControl {
+    return (this.formGroup.get('wordSize') as FormControl) || new FormControl();
   }
 }
