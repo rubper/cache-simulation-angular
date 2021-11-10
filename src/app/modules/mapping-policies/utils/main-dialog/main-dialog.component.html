@@ -1,4 +1,4 @@
-<mat-horizontal-stepper linear #mainStepper>
+<mat-horizontal-stepper linear #mainStepper (selectionChange)="submitForm($event)">
   <mat-step [stepControl]="firstStepForm">
     <form [formGroup]="firstStepForm">
       <ng-template matStepLabel>formGroup1</ng-template>
@@ -18,7 +18,7 @@
           <input matInput formControlName="memAddress">
         </mat-form-field>
       </div>
-      <button mat-button matStepperNext (click)="submitForm($event)" [disabled]="firstStepForm.invalid">Next</button>
+      <button mat-button matStepperNext  [disabled]="firstStepForm.invalid">Next</button>
     </form>
   </mat-step>
   <mat-step>
