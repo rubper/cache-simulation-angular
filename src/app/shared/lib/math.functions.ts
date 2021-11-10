@@ -23,9 +23,21 @@ export class MathFn {
       aux = aux / 1024;
     }
     if (counter <= 8) {
-      
+
       return UnitsDict[counter] as ByteUnits;
     }
     return 'B';
+  }
+
+  static toHex(x: number | string, base?: number): number {
+    return +(parseInt(x.toString(), base).toString(16));
+  }
+
+  static toBinary(x: number | string, base?: number): number {
+    return +(parseInt(x.toString(), base).toString(2));
+  }
+
+  static toDecimal(x: number | string, base?: number): number {
+    return +(parseInt(x.toString(), base).toString(10));
   }
 }

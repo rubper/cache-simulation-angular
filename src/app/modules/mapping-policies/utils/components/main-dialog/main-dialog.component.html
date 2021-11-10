@@ -1,0 +1,29 @@
+<mat-horizontal-stepper linear #mainStepper>
+  <mat-step [stepControl]="firstStepForm">
+    <form [formGroup]="firstStepForm">
+      <ng-template matStepLabel>formGroup1</ng-template>
+      <div>
+        <mat-form-field>
+          <mat-label>Sistema numérico</mat-label>
+          <mat-select formControlName="radix">
+            <mat-option *ngFor="let radix of radixes" [value]="radix">
+              {{radix}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Ingresa tu dirección de memoria</mat-label>
+          <input matInput formControlName="memAddress">
+        </mat-form-field>
+      </div>
+      <button mat-button matStepperNext (click)="submitForm($event)" [disabled]="firstStepForm.invalid">Next</button>
+    </form>
+  </mat-step>
+  <mat-step>
+    Binary: {{addressBinary}} <br>
+    Bits: {{addressBits}}
+    <button mat-button #closeStepper></button>
+  </mat-step>
+</mat-horizontal-stepper>

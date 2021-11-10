@@ -1,7 +1,7 @@
 <mat-card [ngClass]="theme.background">
   <!-- Animation container  -->
   <div class="flex flex-row">
-    <div class="flex-auto w-3/4 h-full">
+    <div class="flex-auto w-1/4 h-full">
       <div class="flex flex-row">
         <div id="main-memory" class="flex-auto shadow w-1/2 h-full">
           <div id="memory" [ngClass]="theme.main" #memory></div>
@@ -13,13 +13,13 @@
     </div>
 
     <!-- Form container -->
-    <div class="flex-auto w-1/4">
+    <div class="flex-auto w-3/4">
       <form [formGroup]="formGroup" (submit)="onSubmit($event)">
         <!-- Main Memory Group -->
         <div class="border rounded border-gray-200 p-2 m-2" #memGroup>
           <h3>Memoria Principal</h3>
           <ng-container *ngIf="bitsMode.getValue()">
-            <mat-form-field>
+            <mat-form-field class="w-full">
               <input
                 type="number"
                 placeholder="Ancho de direcciones"
@@ -54,7 +54,7 @@
           </ng-container>
 
           <ng-container *ngIf="!bitsMode.getValue()">
-            <mat-form-field>
+            <mat-form-field class="w-2/3">
               <input
                 matInput
                 #memSize
@@ -68,7 +68,7 @@
               />
             </mat-form-field>
             &nbsp;
-            <mat-form-field>
+            <mat-form-field class="w-1/4">
               <input
                 type="text"
                 placeholder="Multiplo"
@@ -141,7 +141,7 @@
 
           <!-- Bits mode OFF -->
           <ng-container *ngIf="!bitsMode.getValue()">
-            <mat-form-field>
+            <mat-form-field class="w-2/3">
               <input
                 matInput
                 #memSize
@@ -156,7 +156,7 @@
               />
             </mat-form-field>
             &nbsp;
-            <mat-form-field>
+            <mat-form-field class="w-1/4">
               <input
                 type="text"
                 placeholder="Multiplo"
@@ -218,8 +218,9 @@
           color="primary"
           class="m-8"
           [disabled]="formGroup.invalid"
+          (click)="clickHandler()"
         >
-          Run animation
+          Run
         </button>
       </form>
     </div>
