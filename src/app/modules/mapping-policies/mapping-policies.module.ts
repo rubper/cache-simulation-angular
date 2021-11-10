@@ -6,7 +6,7 @@ import { MappingPoliciesRoutingModule } from './mapping-policies-routing.module'
 import { DirectComponent } from './pages/direct/direct.component';
 import { AssociativeComponent } from './pages/associative/associative.component';
 import { SetAssociativeComponent } from './pages/set-associative/set-associative.component';
-import { MainDialogComponent } from './utils/components/main-dialog/main-dialog.component';
+import { MainDialogComponent } from './utils/main-dialog/main-dialog.component';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
