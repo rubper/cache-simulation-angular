@@ -4,6 +4,10 @@ import { Radix, RadixDict } from '../types/radix.type';
 
 export class RadixValidator {
   static isHex(num: string): boolean {
+    console.log(`Regex: ${hexRegex}`);
+
+    console.log(`num: ${num}`);
+    console.log(`test result: ${hexRegex.test(num)}`);
     return hexRegex.test(num);
   }
 
@@ -23,28 +27,23 @@ export class RadixValidator {
       : false;
   }
 
-  static validInput(radixControl: AbstractControl): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (control.pristine) {
-        return null;
-      }
-      const incoming = radixControl.value as Radix;
+  static validInput(formControl: AbstractControl, value: Radix): boolean {
+      const incoming = value as Radix;
       let output;
       switch (incoming) {
         case RadixDict.bin:
-          output = RadixValidator.isBin(control.value) ? null : { notRadix: true };
+          output = RadixValidator.isBin(formControl.value);
           break;
         case RadixDict.dec:
-          output = RadixValidator.isDec(control.value) ? null : { notRadix: true };
+          output = RadixValidator.isDec(formControl.value);
           break;
         case RadixDict.hex:
-          output = RadixValidator.isHex(control.value) ? null : { notRadix: true };
+          output = RadixValidator.isHex(formControl.value);
           break;
         default:
-          output = RadixValidator.isDec(control.value) ? null : { notRadix: true };
+          output = RadixValidator.isDec(formControl.value);
           break;
       }
       return output;
-    };
   }
 }
