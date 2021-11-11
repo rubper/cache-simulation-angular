@@ -5,7 +5,7 @@
       <div>
         <mat-form-field>
           <mat-label>Sistema numérico</mat-label>
-          <mat-select formControlName="radix">
+          <mat-select formControlName="radix" #Radix>
             <mat-option *ngFor="let radix of radixes" [value]="radix">
               {{radix}}
             </mat-option>
@@ -15,7 +15,7 @@
       <div>
         <mat-form-field>
           <mat-label>Ingresa tu dirección de memoria</mat-label>
-          <input matInput formControlName="memAddress">
+          <input matInput formControlName="memAddress" (change)="changeMemInputHandler(Radix.value)">
         </mat-form-field>
       </div>
       <button mat-button matStepperNext  [disabled]="firstStepForm.invalid">Next</button>

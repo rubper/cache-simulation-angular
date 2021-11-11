@@ -13,6 +13,7 @@ import { MathFn } from '@shared/lib/math.functions';
 
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { matchError } from '@shared/errors/form.errors';
 
 @Component({
   selector: 'acs-main-dialog',
@@ -34,7 +35,7 @@ export class MainDialogComponent {
   ) {
     this.firstStepForm = this.formBuilder.group({
       radix: [DEC, [Validators.required]],
-      memAddress: [null, [Validators.required, RadixValidator.validInput(this.RadixField)]],
+      memAddress: [null, [Validators.required]],
     });
   }
 
@@ -59,15 +60,23 @@ export class MainDialogComponent {
     this.addressBits = this.addressBinary.toString().length;
   }
 
+  changeMemInputHandler(type: Radix): void {
+    if (RadixValidator.validInput(this.AddressField, type)) {
+      this.AddressField.setErrors(null);
+    } else {
+      this.AddressField.setErrors(matchError);
+    }
+  }
+
   get AddressField(): AbstractControl {
     return (
-      (this.firstStepForm.get('memAddress') as FormControl) || new FormControl()
+      (this.firstStepForm?.get('memAddress') as FormControl) || new FormControl()
     );
   }
 
   get RadixField(): AbstractControl {
     return (
-      (this.firstStepForm.get('radix') as FormControl) || new FormControl()
+      (this.firstStepForm?.get('radix') as FormControl) || new FormControl()
     );
   }
 }
