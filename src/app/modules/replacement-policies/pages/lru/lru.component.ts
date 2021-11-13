@@ -7,8 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LruComponent implements OnInit {
 
-  play = true;
-  icon = 'pause';
+  play = false;
+  icon = 'play_arrow';
   celdasMP = [
     'Bloque 1',
     'Bloque 2',
@@ -28,7 +28,7 @@ export class LruComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.getRandomItem();
+    // this.getRandomItem();
   }
 
   getRandomItem(): void {
