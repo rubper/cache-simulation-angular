@@ -5,6 +5,12 @@ import { ReplacementPoliciesRoutingModule } from './replacement-policies-routing
 import { RandomComponent } from './pages/random/random.component';
 import { LruComponent } from './pages/lru/lru.component';
 import { FifoComponent } from './pages/fifo/fifo.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 //Módulo para los algorítmos de sustitución
 @NgModule({
@@ -15,7 +21,13 @@ import { FifoComponent } from './pages/fifo/fifo.component';
   ],
   imports: [
     CommonModule,
-    ReplacementPoliciesRoutingModule
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatDividerModule,
+    MatFormFieldModule,
+    ReplacementPoliciesRoutingModule,
   ]
 })
 export class ReplacementPoliciesModule { }

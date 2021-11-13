@@ -6,15 +6,15 @@ import { RandomComponent } from './pages/random/random.component';
 
 const routes: Routes = [
   {
-    path:'fifo',
+    path: 'fifo',
     component: FifoComponent
   },
   {
-    path:'lru',
+    path: 'lru',
     component: LruComponent
   },
   {
-    path:'random',
+    path: 'random',
     component: RandomComponent
   },
 ];
