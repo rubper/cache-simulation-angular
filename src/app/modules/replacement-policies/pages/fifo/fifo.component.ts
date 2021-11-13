@@ -35,7 +35,7 @@ export class FifoComponent implements OnInit {
     if ( this.play ) {
       setTimeout(() => {
         this.randomItem();
-      }, 2000);
+      }, 5000);
     }
   }
 
