@@ -3,7 +3,6 @@ import {
   ViewChild,
   AfterViewInit,
   ElementRef,
-  ChangeDetectorRef,
   OnInit,
 } from '@angular/core';
 import {
@@ -15,7 +14,7 @@ import {
 } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MainDialogComponent } from '@modules/mapping-policies/utils/main-dialog/main-dialog.component';
+import { DirectDialogComponent } from '@modules/mapping-policies/utils/direct-dialog/direct-dialog.component';
 import {
   ByteUnit,
   ByteUnits,
@@ -189,11 +188,12 @@ export class DirectComponent extends BaseComponent implements OnInit, AfterViewI
   }
 
   clickHandler() {
-    this.mainRef = this.matDialog.open(MainDialogComponent, {
+    this.mainRef = this.matDialog.open(DirectDialogComponent, {
       data: {
         memory: this.MemoryAddrSize?.bits,
         cache: this.CacheAddrSize?.bits,
         blocksize: this.BlockSize.value,
+        _type: 'd',
       },
     });
   }

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MainDialogComponent } from './main-dialog.component';
+import { DirectDialogComponent } from './direct-dialog.component';
 
-describe('MainDialogComponent', () => {
-  let component: MainDialogComponent;
-  let fixture: ComponentFixture<MainDialogComponent>;
+describe('DirectDialogComponent', () => {
+  let component: DirectDialogComponent;
+  let fixture: ComponentFixture<DirectDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MainDialogComponent ]
+      declarations: [ DirectDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MainDialogComponent);
+    fixture = TestBed.createComponent(DirectDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

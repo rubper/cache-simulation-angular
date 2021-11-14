@@ -1,1 +1,235 @@
-<p>set-associative works!</p>
+<mat-card [ngClass]="theme.background">
+    <!-- Animation container  -->
+    <div class="flex flex-row">
+      <div class="flex-auto w-1/4 h-full">
+        <div class="flex flex-row">
+          <div class="flex-auto shadow w-1/2 h-full square">
+            <div id="memory" [ngClass]="theme.main" #memory></div>
+          </div>
+          <div class="flex-auto shadow w-1/2 h-full square">
+            <div id="cache" [ngClass]="theme.accent" #cache></div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Form container -->
+      <div class="flex-auto w-3/4">
+        <form [formGroup]="formGroup" (submit)="onSubmit($event)">
+          <h2>Configurar sistema</h2>
+          <!-- Main Memory Group -->
+          <div class="border rounded border-gray-200 p-2 m-2" #memGroup>
+            <h3>Memoria Principal</h3>
+            <ng-container *ngIf="bitsMode.getValue()">
+              <mat-form-field class="w-full">
+                <input
+                  type="number"
+                  placeholder="Ancho de direcciones"
+                  min="1"
+                  aria-label="Number"
+                  formControlName="memSize"
+                  #memSize
+                  (change)="setMemoryAddrSize()"
+                  matInput
+                  [matAutocomplete]="auto"
+                />
+                <ng-container *ngIf="MemorySize.invalid">
+                  <mat-error *ngIf="MemorySize.errors?.notIncluded">{{
+                    MemorySize.errors?.notIncluded?.message
+                  }}</mat-error>
+                </ng-container>
+              </mat-form-field>
+              bits
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let bits of bitSuggestionSet"
+                  #memSizeOtions
+                  (onSelectionChange)="setMemoryAddrSize()"
+                  [value]="bits"
+                >
+                  {{ bits }}
+                </mat-option>
+              </mat-autocomplete>
+              <br />
+              Unidades direccionables: {{ MemoryAddrSize?.readable }}
+              {{ MemoryAddrSize?.unit }}
+            </ng-container>
+  
+            <ng-container *ngIf="!bitsMode.getValue()">
+              <mat-form-field class="w-2/3">
+                <input
+                  matInput
+                  #memSize
+                  type="number"
+                  min="1"
+                  placeholder="Maximo direccionable"
+                  aria-label="Number"
+                  formControlName="memSize"
+                  autocomplete="off"
+                  (change)="setMemoryAddrSize()"
+                />
+              </mat-form-field>
+              &nbsp;
+              <mat-form-field class="w-1/4">
+                <input
+                  type="text"
+                  placeholder="Multiplo"
+                  aria-label="Text"
+                  formControlName="memTypeSize"
+                  #memTypeSize
+                  (change)="setMemoryAddrSize()"
+                  matInput
+                  [matAutocomplete]="autoMemType"
+                />
+                <ng-container *ngIf="MemorySize.invalid">
+                  <mat-error *ngIf="MemorySize.errors?.notIncluded">{{
+                    MemorySize.errors?.notIncluded?.message
+                  }}</mat-error>
+                </ng-container>
+              </mat-form-field>
+              <mat-autocomplete
+                #memTypeSizeOtions
+                (optionSelected)="setMemoryAddrSize()"
+                #autoMemType="matAutocomplete"
+              >
+                <mat-option *ngFor="let bits of ByteUnitsDict" [value]="bits">
+                  {{ bits }}
+                </mat-option>
+              </mat-autocomplete>
+              <br />
+              Bits: {{ MemoryAddrSize?.bits }}
+            </ng-container>
+          </div>
+          <!-- End Main Memory Group -->
+  
+          <!-- Cache Group -->
+          <div class="border rounded border-gray-200 p-2 m-2" #cacheGroup>
+            <h3>Lineas de Cache</h3>
+            <!-- Bits mode ON -->
+            <ng-container *ngIf="bitsMode.getValue()">
+              <mat-form-field>
+                <input
+                  type="number"
+                  placeholder="Ancho de direcciones"
+                  min="1"
+                  aria-label="Number"
+                  formControlName="cacheSize"
+                  #memSize
+                  (change)="setCacheAddrSize()"
+                  matInput
+                  [matAutocomplete]="auto"
+                />
+                <ng-container *ngIf="MemorySize.invalid">
+                  <mat-error *ngIf="MemorySize.errors?.notIncluded">{{
+                    MemorySize.errors?.notIncluded?.message
+                  }}</mat-error>
+                </ng-container>
+              </mat-form-field>
+              bits
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let bits of bitSuggestionSet"
+                  #memSizeOtions
+                  (onSelectionChange)="setCacheAddrSize()"
+                  [value]="bits"
+                >
+                  {{ bits }}
+                </mat-option>
+              </mat-autocomplete>
+              <br />
+              Maximo direccionable: {{ CacheAddrSize?.readable }}
+              {{ CacheAddrSize?.unit }}
+            </ng-container>
+  
+            <!-- Bits mode OFF -->
+            <ng-container *ngIf="!bitsMode.getValue()">
+              <mat-form-field class="w-2/3">
+                <input
+                  matInput
+                  #memSize
+                  type="number"
+                  min="1"
+                  step="1"
+                  placeholder="Maximo direccionable"
+                  aria-label="Number"
+                  formControlName="cacheSize"
+                  autocomplete="off"
+                  (change)="setCacheAddrSize()"
+                />
+              </mat-form-field>
+              &nbsp;
+              <mat-form-field class="w-1/4">
+                <input
+                  type="text"
+                  placeholder="Multiplo"
+                  aria-label="Text"
+                  formControlName="cacheTypeSize"
+                  #memTypeSize
+                  (change)="setCacheAddrSize()"
+                  matInput
+                  [matAutocomplete]="autoMemType"
+                />
+                <ng-container *ngIf="MemorySize.invalid">
+                  <mat-error *ngIf="MemorySize.errors?.notIncluded">{{
+                    MemorySize.errors?.notIncluded?.message
+                  }}</mat-error>
+                </ng-container>
+              </mat-form-field>
+              <mat-autocomplete
+                #memTypeSizeOtions
+                (optionSelected)="setCacheAddrSize()"
+                #autoMemType="matAutocomplete"
+              >
+                <mat-option *ngFor="let bits of ByteUnitsDict" [value]="bits">
+                  {{ bits }}
+                </mat-option>
+              </mat-autocomplete>
+              <br />
+              Bits: {{ CacheAddrSize?.bits }}
+            </ng-container>
+          </div>
+          <!-- End Cache Group -->
+  
+          <div class="border rounded border-gray-200 p-2 m-2">
+            <mat-form-field>
+              <input
+                matInput
+                placeholder="Tamaño de bloques"
+                formControlName="wordSize"
+                #wordSize
+                (change)="setWordSize(wordSize)"
+                [matAutocomplete]="wordAutocomplete"
+              />
+            </mat-form-field>
+            bits
+            <mat-autocomplete #wordAutocomplete="matAutocomplete">
+              <mat-option
+                *ngFor="let bits of bitSuggestionSet"
+                #wordSizeOptions
+                (onSelectionChange)="setWordSize(wordSizeOptions)"
+                [value]="bits"
+              >
+                {{ bits }}
+              </mat-option>
+            </mat-autocomplete>
+            <br />
+            Blocksize: {{ WordSize?.readable }} {{ WordSize?.unit }}
+          </div>
+          <button
+            mat-button
+            color="primary"
+            class="m-8"
+            [disabled]="formGroup.invalid"
+            (click)="clickHandler()"
+          >
+            Ubicar
+          </button>
+          <!-- Toggle button  -->
+          <mat-slide-toggle color="primary" formControlName="bitsMode" (change)="toggleBitMode()">
+            Bits mode
+          </mat-slide-toggle>
+        </form>
+      </div>
+    </div>
+    <!-- End Form container -->
+  
+  </mat-card>
