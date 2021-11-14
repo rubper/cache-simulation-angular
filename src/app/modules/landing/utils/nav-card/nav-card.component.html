@@ -1,0 +1,27 @@
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        {{link.title}}
+      </h3>
+      <ng-container *ngIf="link.description">
+          <p class="mt-1 max-w-2xl text-sm text-gray-900">
+            {{link.description}}
+          </p>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="link.subLinks.length > 0">
+        <div class="border-t border-gray-200">
+          <dl>
+            <ng-template ngFor let-sublink [ngForOf]="link.subLinks" let-i="index">
+                <a [routerLink]="['/', link.name, sublink.name]">
+                    <div matRipple [ngClass]="{'bg-gray-50' : i % 2 !== 0, 'bg-white' : i % 2 === 0 }" class="px-4 py-5 sm:px-6">
+                      <dt class="text-md font-medium text-gray-900">
+                        {{sublink.title}}
+                      </dt>
+                    </div>
+                </a>
+              </ng-template>
+          </dl>
+        </div>
+    </ng-container>
+  </div>
