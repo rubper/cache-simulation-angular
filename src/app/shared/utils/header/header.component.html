@@ -16,8 +16,8 @@
         <a [routerLink]="['/']">
           <span class="sr-only">Workflow</span>
           <img
-            class="h-8 w-auto sm:h-10"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+            class="h-20 w-auto sm:h-20"
+            src="/assets/logo-ues.svg"
             alt=""
           />
         </a>
@@ -69,7 +69,7 @@
           <div>
             <img
               class="h-8 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+              src="https://www.ues.edu.sv/storage/app/uploads/public/5db/8b2/922/5db8b292249e3987748465.png"
               alt="Workflow"
             />
           </div>
@@ -87,9 +87,8 @@
                 focus:outline-none
                 focus:ring-2
                 focus:ring-inset
-                focus:ring-indigo-500
               "
-              [ngClass]="theme.background"
+              [ngClass]="[theme.background, theme.ringMain]"
             >
               <span class="sr-only">Close menu</span>
               <!-- Heroicon name: outline/x -->
@@ -119,7 +118,8 @@
             >
               <!-- Heroicon name: outline/chart-bar -->
               <svg
-                class="flex-shrink-0 h-6 w-6 text-indigo-600"
+                [ngClass]="[theme.textMain]"
+                class="flex-shrink-0 h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -144,7 +144,8 @@
             >
               <!-- Heroicon name: outline/cursor-click -->
               <svg
-                class="flex-shrink-0 h-6 w-6 text-indigo-600"
+              [ngClass]="[theme.textMain]"
+                class="flex-shrink-0 h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -169,7 +170,8 @@
             >
               <!-- Heroicon name: outline/shield-check -->
               <svg
-                class="flex-shrink-0 h-6 w-6 text-indigo-600"
+              [ngClass]="[theme.textMain]"
+                class="flex-shrink-0 h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -194,7 +196,8 @@
             >
               <!-- Heroicon name: outline/view-grid -->
               <svg
-                class="flex-shrink-0 h-6 w-6 text-indigo-600"
+              [ngClass]="[theme.textMain]"
+                class="flex-shrink-0 h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -219,7 +222,8 @@
             >
               <!-- Heroicon name: outline/refresh -->
               <svg
-                class="flex-shrink-0 h-6 w-6 text-indigo-600"
+              [ngClass]="[theme.textMain]"
+                class="flex-shrink-0 h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -300,9 +304,8 @@
               text-base
               font-medium
               text-white
-              hover:bg-indigo-700
             "
-            [ngClass]="theme"
+            [ngClass]="theme.hover"
           >
             Sign up
           </a>
@@ -310,7 +313,7 @@
             Existing customer?
             <a
               [routerLink]="['/']"
-              class="text-indigo-600 hover:text-indigo-500"
+              [ngClass]="[theme.textMain, theme.hoverTextMain]"
             >
               Sign in
             </a>
