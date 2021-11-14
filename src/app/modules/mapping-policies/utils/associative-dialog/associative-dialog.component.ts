@@ -16,18 +16,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { matchError } from '@shared/errors/form.errors';
 import { lessThanSize } from '../validators/less-than-size.validator';
 import { BaseComponent } from '@shared/utils/base.component';
-export interface ConfigData {
-  memory: string;
-  cache: string;
-  blocksize: string;
-}
+import { ConfigData } from '../types/config-data.type';
 
 @Component({
-  selector: 'acs-main-dialog',
-  templateUrl: './main-dialog.component.html',
-  styleUrls: ['./main-dialog.component.css'],
+  selector: 'acs-associative-dialog',
+  templateUrl: './associative-dialog.component.html',
+  styleUrls: ['./associative-dialog.component.css'],
 })
-export class MainDialogComponent extends BaseComponent {
+export class AssociativeDialogComponent extends BaseComponent {
   // input data
   firstStepForm: FormGroup;
   addressBits = 0;
@@ -53,7 +49,7 @@ export class MainDialogComponent extends BaseComponent {
   cacheLine?: string;
   constructor(
     private readonly formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<MainDialogComponent>,
+    private dialogRef: MatDialogRef<AssociativeDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     data: ConfigData
   ) {
@@ -67,7 +63,7 @@ export class MainDialogComponent extends BaseComponent {
           Validators.required,
           RadixValidator.validInput,
           RadixValidator.uniformGroups,
-          lessThanSize(data),
+          lessThanSize(this.configData),
         ],
       ],
     });

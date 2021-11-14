@@ -4,11 +4,8 @@ import {
   RadixDict,
 } from '@modules/mapping-policies/utils/types/radix.type';
 import { MathFn } from '@shared/lib/math.functions';
-export function lessThanSize(data: {
-  memory: string;
-  cache: string;
-  blocksize: string;
-}): ValidatorFn {
+import { ConfigData } from '../types/config-data.type';
+export function lessThanSize(data: ConfigData): ValidatorFn {
     
     return (control: AbstractControl): ValidationErrors | null => {
       console.log(data);
