@@ -30,7 +30,6 @@ export class HeaderService {
     this.menuIsActive$.next(true);
     this.handlers[group.name]?.next(true);
     this.openTabsCount++;
-    console.log(this.openTabsCount);
   }
   /**
    * Tells the handler to set to False the Behavior Subject that handles the state of our menu
@@ -42,7 +41,6 @@ export class HeaderService {
       this.openTabsCount--;
     }
     this.menuIsActive$.next(false);
-    console.log(this.openTabsCount);
   }
   /**
    * Tells the outsideClick Behavior Subject that there was an outside click
