@@ -3,6 +3,7 @@
   #mainStepper
   (selectionChange)="submitForm($event)"
 >
+<mat-dialog-content>
   <mat-step [stepControl]="firstStepForm">
     <form [formGroup]="firstStepForm">
       <ng-template matStepLabel>Provee la direccion de memoria</ng-template>
@@ -85,4 +86,5 @@
     Ancho de palabras: {{ configData.blocksize }} bits <br /><br />
     <button mat-button #closeStepper></button>
   </mat-step>
+</mat-dialog-content>
 </mat-horizontal-stepper>
