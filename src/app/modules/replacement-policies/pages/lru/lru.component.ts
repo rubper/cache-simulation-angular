@@ -20,6 +20,7 @@ export class LruComponent implements OnInit {
     'Bloque 8',
   ];
   celdasMC: string[] = [];
+  leastRecentlyUsed: string[] = [];
   logs: string[] = [];
 
   celdaInput = true;
@@ -41,12 +42,17 @@ export class LruComponent implements OnInit {
 
   randomItem(): void {
     this.bloqueSolicitado = Math.floor(Math.random() * this.celdasMP.length);
-    this.pushLog(this.celdasMP[this.bloqueSolicitado] + ' solicitado...');
-    if (this.celdasMC.indexOf(this.celdasMP[this.bloqueSolicitado], 0) > -1) {
-      this.pushLog('El ' + this.celdasMP[this.bloqueSolicitado] + ' ya está en caché...');
+    const bloque = this.celdasMP[this.bloqueSolicitado];
+    this.pushLog(bloque + ' solicitado...');
+    if (this.celdasMC.indexOf(bloque, 0) > -1) {
+      this.pushLog('El ' + bloque + ' ya está en caché...');
+      const indexUsed = this.leastRecentlyUsed.indexOf(bloque, 0);
+      this.leastRecentlyUsed.splice(indexUsed, 1);
+      this.leastRecentlyUsed.push(bloque);
       this.getRandomItem();
     } else {
       this.addToCache(this.bloqueSolicitado);
+      this.leastRecentlyUsed.push(bloque);
       this.getRandomItem();
     }
   }
@@ -61,9 +67,11 @@ export class LruComponent implements OnInit {
   }
 
   deleteFromCacheRandom(): void {
-    const bloqueDelete = 0;
+    const bloqueMenosUsado = this.leastRecentlyUsed[0];
+    const bloqueDelete = this.celdasMC.indexOf(bloqueMenosUsado, 0);
     this.pushLog( this.celdasMC[bloqueDelete] + ' eliminado de caché...');
     this.celdasMC.splice(bloqueDelete, 1);
+    this.leastRecentlyUsed.splice(0, 1);
   }
 
   pushLog(comentario: string): void {
