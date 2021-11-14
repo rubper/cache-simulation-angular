@@ -118,16 +118,16 @@ export class DirectDialogComponent extends BaseComponent {
 
     this.tag = this.addressBinary.substring(0, this.tagBits);
     this.word = this.addressBinary.substring(
-      this.addressBinary.length - Number(this.configData.blocksize),
+      this.memoryBlocksBits,
       this.addressBinary.length
     );
     this.memBlock = this.addressBinary.substring(
       0,
-      this.addressBinary.length - Number(this.configData.blocksize)
+      this.memoryBlocksBits
     );
     this.cacheLine = this.addressBinary.substring(
       this.tagBits,
-      this.addressBinary.length - Number(this.configData.blocksize)
+      this.memoryBlocksBits
     );
   }
 
