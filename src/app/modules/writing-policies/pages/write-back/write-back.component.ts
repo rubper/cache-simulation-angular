@@ -107,11 +107,13 @@ export class WriteBackComponent implements OnInit {
       this.celdasMC.push(this.celdasMP[index]);
       this.direccionesEnMC.push(this.direccionesMP[index]);
       this.dataMC.push(this.dataMP[index]);
+      this.pushLog( 'Nuevo valor del bloque: ' + this.nuevoValorBloqueSolicitado );
     } else {
       this.deleteFromCacheRandom();
       this.celdasMC.push(this.celdasMP[index]);
       this.direccionesEnMC.push(this.direccionesMP[index]);
       this.dataMC.push(this.dataMP[index]);
+      this.pushLog( 'Nuevo valor del bloque: ' + this.nuevoValorBloqueSolicitado );
     }
   }
 
