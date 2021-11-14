@@ -3,88 +3,71 @@
   #mainStepper
   (selectionChange)="submitForm($event)"
 >
-<mat-dialog-content>
-  <mat-step [stepControl]="firstStepForm">
-    <form [formGroup]="firstStepForm">
-      <ng-template matStepLabel>Provee la direccion de memoria</ng-template>
-      <div>
-        <mat-form-field>
-          <mat-label>Sistema numérico</mat-label>
-          <mat-select formControlName="radix" #Radix>
-            <mat-option *ngFor="let radix of radixes" [value]="radix">
-              {{ radix }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div>
-        <mat-form-field>
-          <mat-label>Ingresa tu dirección de memoria</mat-label>
-          <input matInput formControlName="memAddress" autocomplete="off" />
-        </mat-form-field>
-      </div>
-      <button mat-button matStepperNext [disabled]="firstStepForm.invalid">
-        Next
-      </button>
-    </form>
-  </mat-step>
-  <mat-step>
-    Direccion en binario:
-    <div id="tag" class="inline" [ngClass]="litTag ? this.litColor : ''">
-      {{ tag }}
-    </div>
-    <div id="cache" class="inline" [ngClass]="litCache ? this.litColor : ''">
-      {{ cacheLine }}
-    </div>
-    <div id="word" class="inline" [ngClass]="litWord ? this.litColor : ''">
-      {{ word }}
-    </div>
-    <br />
-    Ancho minimo requerido de la direccion: {{ addressBits }} bits <br /><br />
-
-    <div class="border rounded border-gray-200 p-2 m-2" #result>
-      Resultado:
-      <br />
-      Etiqueta:
-      <div
-        (mouseover)="litTag = true"
-        (mouseout)="litTag = false"
-        class="inline"
-      >
+  <mat-dialog-content>
+    <mat-step [stepControl]="firstStepForm">
+      <form [formGroup]="firstStepForm">
+        <ng-template matStepLabel>Provee la direccion de memoria</ng-template>
+        <div>
+          <mat-form-field>
+            <mat-label>Sistema numérico</mat-label>
+            <mat-select formControlName="radix" #Radix>
+              <mat-option *ngFor="let radix of radixes" [value]="radix">
+                {{ radix }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Ingresa tu dirección de memoria</mat-label>
+            <input matInput formControlName="memAddress" autocomplete="off" />
+          </mat-form-field>
+        </div>
+        <button mat-button matStepperNext [disabled]="firstStepForm.invalid">
+          Next
+        </button>
+      </form>
+    </mat-step>
+    <mat-step>
+      Direccion en binario:
+      <div id="tag" class="inline" [ngClass]="litTag ? this.litColor : ''">
         {{ tag }}
       </div>
-      <br /><br />
-      Linea en cache:
-      <div
-        (mouseover)="litCache = true"
-        (mouseout)="litCache = false"
-        class="inline"
-      >
-        {{ cacheLine }}
-      </div>
-      <br /><br />
-      Palabra:
-      <div
-        (mouseover)="litWord = true"
-        (mouseout)="litWord = false"
-        class="inline"
-      >
+      <div id="word" class="inline" [ngClass]="litWord ? this.litColor : ''">
         {{ word }}
       </div>
+      <br />
+      Ancho minimo requerido de la direccion: {{ addressBits }} bits
       <br /><br />
-      Bloque en Memoria: {{ memBlock }} <br /><br />
-    </div>
 
-    Bloques en Memoria Principal: {{ memoryBlocks }} bloques
-    <br />
-    Bits de bloques de memoria principal {{ memoryBlocksBits }} bits
-    <br /><br />
-    Lineas de cache: {{ cacheLines }} lineas
-    <br />
-    Bits de lineas de cache {{ cacheLinesBits }} bits <br /><br />
-    Ancho de etiquetas: {{ tagBits }} bits <br /><br />
-    Ancho de palabras: {{ configData.blocksize }} bits <br /><br />
-    <button mat-button #closeStepper></button>
-  </mat-step>
-</mat-dialog-content>
+      <div class="border rounded border-gray-200 p-2 m-2" #result>
+        Resultado:
+        <br />
+        Etiqueta:
+        <div
+          (mouseover)="litTag = true"
+          (mouseout)="litTag = false"
+          class="inline"
+        >
+          {{ tag }}
+        </div>
+        <br /><br />
+        Palabra:
+        <div
+          (mouseover)="litWord = true"
+          (mouseout)="litWord = false"
+          class="inline"
+        >
+          {{ word }}
+        </div>
+        <br /><br />
+        Bloque en Memoria: {{ memBlock }} <br /><br />
+      </div>
+
+      Bloques en Memoria Principal: {{ memoryBlocks }} bloques <br /><br />
+      Ancho de etiquetas: {{ tagBits }} bits <br /><br />
+      Ancho de palabras: {{ configData.blocksize }} bits <br /><br />
+      <button mat-button #closeStepper></button>
+    </mat-step>
+  </mat-dialog-content>
 </mat-horizontal-stepper>

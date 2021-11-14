@@ -29,9 +29,6 @@ export class AssociativeDialogComponent extends BaseComponent {
   addressBits = 0;
   addressBinary: string = BigInt(0).toString();
   memoryBlocks: number;
-  memoryBlocksBits: number;
-  cacheLines: number;
-  cacheLinesBits: number;
   tagBits: number;
   configData: ConfigData;
 
@@ -46,7 +43,6 @@ export class AssociativeDialogComponent extends BaseComponent {
   tag?: string;
   word?: string;
   memBlock?: string;
-  cacheLine?: string;
   constructor(
     private readonly formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<AssociativeDialogComponent>,
@@ -67,11 +63,8 @@ export class AssociativeDialogComponent extends BaseComponent {
         ],
       ],
     });
-    this.memoryBlocksBits = Number(data.memory) - Number(data.blocksize);
-    this.memoryBlocks = Math.pow(2, this.memoryBlocksBits);
-    this.cacheLinesBits = Number(data.cache) - Number(data.blocksize);
-    this.cacheLines = Math.pow(2, this.cacheLinesBits);
-    this.tagBits = this.memoryBlocksBits - this.cacheLinesBits;
+    this.tagBits = +data.memory - +data.blocksize;
+    this.memoryBlocks = Math.pow(2, this.tagBits);
     if (this.tagBits <= 0) {
       console.error('validation error, tags cant be negative');
     }
@@ -109,25 +102,21 @@ export class AssociativeDialogComponent extends BaseComponent {
         break;
     }
     this.addressBits = this.addressBinary.toString().length;
-    if (this.addressBits < Number(this.configData.memory)) {
+    if (this.addressBits < +this.configData.memory) {
       this.addressBinary = this.addressBinary.padStart(
-        Number(this.configData.memory),
+        +this.configData.memory,
         '0'
       );
     }
 
     this.tag = this.addressBinary.substring(0, this.tagBits);
     this.word = this.addressBinary.substring(
-      this.addressBinary.length - Number(this.configData.blocksize),
-      this.addressBinary.length
+      this.tagBits,
+      +this.configData.memory
     );
     this.memBlock = this.addressBinary.substring(
       0,
-      this.addressBinary.length - Number(this.configData.blocksize)
-    );
-    this.cacheLine = this.addressBinary.substring(
-      this.tagBits,
-      this.addressBinary.length - Number(this.configData.blocksize)
+      this.tagBits
     );
   }
 

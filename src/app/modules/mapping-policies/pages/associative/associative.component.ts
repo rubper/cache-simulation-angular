@@ -24,6 +24,7 @@ import { MathFn } from '@shared/lib/math.functions';
 
 // anime lib
 import { AnimeService } from '@animations/anime.service';
+import { ConfigData } from '@modules/mapping-policies/utils/types/config-data.type';
 
 // constants
 const STARTING_WORD_SIZE = 3;
@@ -33,7 +34,7 @@ const STARTING_WORD_SIZE = 3;
   templateUrl: './associative.component.html',
   styleUrls: ['./associative.component.css']
 })
-export class AssociativeComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class AssociativeComponent extends BaseComponent implements AfterViewInit {
   // handles configs for display elements
   @ViewChild('memory') memoryDBlock: ElementRef | undefined;
   @ViewChild('cache') cacheDBlock: ElementRef | undefined;
@@ -74,8 +75,6 @@ export class AssociativeComponent extends BaseComponent implements OnInit, After
     this.formGroup = this.formBuilder.group({
       memSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
       memTypeSize: ['B' as Radix], // BitsValidator(this.bitSuggestionSet)]],
-      cacheSize: [null, [Validators.required, lessThanMemoryField]], // BitsValidator(this.bitSuggestionSet)]],
-      cacheTypeSize: ['B' as Radix], // BitsValidator(this.bitSuggestionSet)]],
       wordSize: [STARTING_WORD_SIZE, [Validators.required]],
       bitsMode: [false]
     });
@@ -87,15 +86,6 @@ export class AssociativeComponent extends BaseComponent implements OnInit, After
       readable: MathFn.getLowestIntegerByte(addr),
       unit: MathFn.getByteMultiple(addr),
     };
-  }
-
-  ngOnInit(): void {
-    this.MemorySizeType.valueChanges.subscribe((change) => {
-      this.CacheSize.updateValueAndValidity();
-    });
-    this.CacheSizeType.valueChanges.subscribe((change) => {
-      this.CacheSize.updateValueAndValidity();
-    });
   }
 
   ngAfterViewInit(): void {}
@@ -111,13 +101,6 @@ export class AssociativeComponent extends BaseComponent implements OnInit, After
     this.MemoryAddrSize = this.handleConversionOnChange(
       this.MemorySize,
       this.MemorySizeType
-    );
-  }
-
-  setCacheAddrSize(): void {
-    this.CacheAddrSize = this.handleConversionOnChange(
-      this.CacheSize,
-      this.CacheSizeType
     );
   }
 
@@ -183,17 +166,15 @@ export class AssociativeComponent extends BaseComponent implements OnInit, After
       this.bitsMode.next(true);
     }
     this.setMemoryAddrSize();
-    this.setCacheAddrSize();
   }
 
   clickHandler() {
     this.mainRef = this.matDialog.open(AssociativeDialogComponent, {
       data: {
-        memory: this.MemoryAddrSize?.bits,
-        cache: this.CacheAddrSize?.bits,
+        memory: this.MemoryAddrSize ? this.MemoryAddrSize.bits : '0',
         blocksize: this.BlockSize.value,
         _type: 'a',
-      },
+      } as ConfigData,
     });
   }
 
@@ -216,17 +197,6 @@ export class AssociativeComponent extends BaseComponent implements OnInit, After
   get MemorySizeType(): AbstractControl {
     return (
       (this.formGroup.get('memTypeSize') as FormControl) || new FormControl()
-    );
-  }
-  // gets Cache form's controls
-  get CacheSize(): AbstractControl {
-    return (
-      (this.formGroup.get('cacheSize') as FormControl) || new FormControl()
-    );
-  }
-  get CacheSizeType(): AbstractControl {
-    return (
-      (this.formGroup.get('cacheTypeSize') as FormControl) || new FormControl()
     );
   }
   // gets Cache form's controls
