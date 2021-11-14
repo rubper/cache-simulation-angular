@@ -17,6 +17,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
+import { NgxMaskModule } from 'ngx-mask';
 
 //Módulo para las políticas de ubicacion
 @NgModule({
@@ -40,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatAutocompleteModule,
     MatDialogModule,
     MatSelectModule,
+    NgxMaskModule
   ]
 })
 export class MappingPoliciesModule { }
