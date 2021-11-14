@@ -6,11 +6,11 @@
     <mat-card-content style="position: relative;">
         <mat-card style="position: absolute; top: 10px; right: 10px; display: inline;">
             <button mat-icon-button type="button" (click)="playProcess()">
-            <mat-icon> {{ icon }} </mat-icon>
-          </button>
+              <mat-icon> {{ icon }} </mat-icon>
+            </button>
             <button mat-icon-button [disabled]="play" type="button" (click)="skipNext()">
-            <mat-icon>skip_next</mat-icon>
-          </button>
+              <mat-icon>skip_next</mat-icon>
+            </button>
         </mat-card>
         <table style="width: 100%;">
             <tr>
@@ -45,6 +45,7 @@
                                         <mat-card-content>
                                             <strong>Conjunto:</strong> {{ direccionesEnMC[i].substr(5, 7) }} <br>
                                             <strong>Etiqueta:</strong> {{ direccionesEnMC[i].substr(0, 5) }} <br>
+                                            <strong>Dirty Bit:</strong> {{ dirtyBit[i] }} <br>
                                             <strong>Data:</strong> {{ dataMC[i] }}
                                         </mat-card-content>
                                     </mat-card>

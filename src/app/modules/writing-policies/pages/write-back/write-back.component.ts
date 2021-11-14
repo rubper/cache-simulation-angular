@@ -18,6 +18,7 @@ export class WriteBackComponent implements OnInit {
 
   direccionesEnMC: string[] = [];
   dataMC: string[] = [];
+  dirtyBit: number[] = [];
 
   celdaInput = true;
   bloqueSolicitado = 0;
@@ -97,23 +98,24 @@ export class WriteBackComponent implements OnInit {
       this.getRandomItem();
     } else {
       this.addToCache(this.bloqueSolicitado);
-      this.getRandomItem();
+      this.generateNewValue();
+      setTimeout(() => {
+        this.updateDataMainValue();
+      }, 6000);
     }
   }
 
   addToCache(index: number): void {
-    this.nuevoValorBloqueSolicitado = this.generateData(5);
+    this.dirtyBit.push(0);
     if (this.celdasMC.length <= 3) {
       this.celdasMC.push(this.celdasMP[index]);
       this.direccionesEnMC.push(this.direccionesMP[index]);
       this.dataMC.push(this.dataMP[index]);
-      this.pushLog( 'Nuevo valor del bloque: ' + this.nuevoValorBloqueSolicitado );
     } else {
       this.deleteFromCacheRandom();
       this.celdasMC.push(this.celdasMP[index]);
       this.direccionesEnMC.push(this.direccionesMP[index]);
       this.dataMC.push(this.dataMP[index]);
-      this.pushLog( 'Nuevo valor del bloque: ' + this.nuevoValorBloqueSolicitado );
     }
   }
 
@@ -132,6 +134,41 @@ export class WriteBackComponent implements OnInit {
       this.logs.splice(1, 1);
       this.logs.push(comentario);
     }
+  }
+
+  generateNewValue(): void {
+    const probabilidad = Math.random();
+    if ( probabilidad < 0.50 ) {
+      // Generación de un nuevo valor de forma aleatoria
+      this.nuevoValorBloqueSolicitado = this.generateData(5);
+      this.pushLog( 'Nuevo valor del bloque: ' + this.nuevoValorBloqueSolicitado );
+      // Actualización del valor luego de dos segundos
+      setTimeout(() => {
+        this.pushLog('Actualizando valor en MC...');
+        this.updateDataCacheValue( this.nuevoValorBloqueSolicitado, this.bloqueSolicitado );
+      }, 5000);
+    }
+  }
+
+  updateDataMainValue(): void {
+    this.getRandomItem();
+    const celdaMP = this.celdasMP[this.bloqueSolicitado];
+    const indexMC = this.celdasMC.indexOf(celdaMP, 0);
+    if ( this.dirtyBit[indexMC] === 1 ) {
+      this.pushLog('El dato del ' + this.celdasMP[this.bloqueSolicitado] + ' ha sido modificado...');
+      setTimeout(() => {
+        this.pushLog('Actualizando valor en MP...');
+        this.dataMP[this.bloqueSolicitado] = this.nuevoValorBloqueSolicitado;
+      }, 2000);
+    } else {
+      this.pushLog('El dato del ' + this.celdasMP[this.bloqueSolicitado] + ' no ha sido modificado...');
+    }
+  }
+
+  updateDataCacheValue( value: string, index: number ): void {
+    const indexMC = this.dataMC.indexOf(this.dataMP[index], 0);
+    this.dataMC[indexMC] = value;
+    this.dirtyBit[indexMC] = 1;
   }
 
   playProcess(): void {
