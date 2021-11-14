@@ -11,3 +11,9 @@ export const RadixDict = {
   dec: 'decimal',
   hex: 'hexadecimal',
 };
+
+export const RadixArray: ReadonlyArray<Radix> = [
+  BIN,
+  DEC,
+  HEX,
+];

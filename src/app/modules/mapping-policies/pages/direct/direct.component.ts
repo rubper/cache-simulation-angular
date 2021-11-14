@@ -4,6 +4,7 @@ import {
   AfterViewInit,
   ElementRef,
   ChangeDetectorRef,
+  OnInit,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -20,18 +21,21 @@ import {
   ByteUnits,
   UnitsDict,
 } from '@modules/mapping-policies/utils/types/byte-unit.type';
+import { Radix } from '@modules/mapping-policies/utils/types/radix.type';
+import { lessThanMemoryField } from '@modules/mapping-policies/utils/validators/less-than-field.validator';
 import { MathFn } from '@shared/lib/math.functions';
 import { Position } from '@shared/types/position.type';
 import { BaseComponent } from '@shared/utils/base.component';
 import { BehaviorSubject } from 'rxjs';
 import { AnimeService } from 'src/app/animations/anime.service';
+const STARTING_WORD_SIZE = 3;
 
 @Component({
   selector: 'acs-direct',
   templateUrl: './direct.component.html',
   styleUrls: ['./direct.component.css'],
 })
-export class DirectComponent extends BaseComponent implements AfterViewInit {
+export class DirectComponent extends BaseComponent implements OnInit, AfterViewInit {
   // handles configs for display elements
   @ViewChild('memory') memoryDBlock: ElementRef | undefined;
   @ViewChild('cache') cacheDBlock: ElementRef | undefined;
@@ -71,19 +75,29 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
     // set the form itself
     this.formGroup = this.formBuilder.group({
       memSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
-      memTypeSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
-      cacheSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
-      cacheTypeSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
-      wordSize: [8, [Validators.required]],
+      memTypeSize: ['B' as Radix], // BitsValidator(this.bitSuggestionSet)]],
+      cacheSize: [null, [Validators.required, lessThanMemoryField]], // BitsValidator(this.bitSuggestionSet)]],
+      cacheTypeSize: ['B' as Radix], // BitsValidator(this.bitSuggestionSet)]],
+      wordSize: [STARTING_WORD_SIZE, [Validators.required]],
+      bitsMode: [false]
     });
 
     // do conversion of the blocksize
-    const addr = Math.pow(2, 8);
+    const addr = Math.pow(2, STARTING_WORD_SIZE);
     this.WordSize = {
       value: addr,
       readable: MathFn.getLowestIntegerByte(addr),
       unit: MathFn.getByteMultiple(addr),
     };
+  }
+
+  ngOnInit(): void {
+    this.MemorySizeType.valueChanges.subscribe((change) => {
+      this.CacheSize.updateValueAndValidity();
+    });
+    this.CacheSizeType.valueChanges.subscribe((change) => {
+      this.CacheSize.updateValueAndValidity();
+    });
   }
 
   ngAfterViewInit(): void {}
@@ -92,8 +106,7 @@ export class DirectComponent extends BaseComponent implements AfterViewInit {
     $event.preventDefault();
     $event.stopPropagation();
     // the animation to execute on submit
-    this.animeService.move('#memory', 100, 0); // moves #memory to x:100, y:0, from its ORIGINAL position
-    this.animeService.move('#cache', -200, 0); // moves #cache to x:-200, y:0, from its ORIGINAL position
+    this.animeService.rotate('.square', 2000);  // moves #cache to x:-200, y:0, from its ORIGINAL position
   }
 
   setMemoryAddrSize(): void {

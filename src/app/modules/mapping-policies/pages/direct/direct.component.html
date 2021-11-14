@@ -3,10 +3,10 @@
   <div class="flex flex-row">
     <div class="flex-auto w-1/4 h-full">
       <div class="flex flex-row">
-        <div id="main-memory" class="flex-auto shadow w-1/2 h-full">
+        <div class="flex-auto shadow w-1/2 h-full square">
           <div id="memory" [ngClass]="theme.main" #memory></div>
         </div>
-        <div id="cache-memory" class="flex-auto shadow w-1/2 h-full">
+        <div class="flex-auto shadow w-1/2 h-full square">
           <div id="cache" [ngClass]="theme.accent" #cache></div>
         </div>
       </div>
@@ -15,6 +15,7 @@
     <!-- Form container -->
     <div class="flex-auto w-3/4">
       <form [formGroup]="formGroup" (submit)="onSubmit($event)">
+        <h2>Configurar sistema</h2>
         <!-- Main Memory Group -->
         <div class="border rounded border-gray-200 p-2 m-2" #memGroup>
           <h3>Memoria Principal</h3>
@@ -49,7 +50,7 @@
               </mat-option>
             </mat-autocomplete>
             <br />
-            Maximo direccionable: {{ MemoryAddrSize?.readable }}
+            Unidades direccionables: {{ MemoryAddrSize?.readable }}
             {{ MemoryAddrSize?.unit }}
           </ng-container>
 
@@ -102,7 +103,7 @@
 
         <!-- Cache Group -->
         <div class="border rounded border-gray-200 p-2 m-2" #cacheGroup>
-          <h3>Cache</h3>
+          <h3>Lineas de Cache</h3>
           <!-- Bits mode ON -->
           <ng-container *ngIf="bitsMode.getValue()">
             <mat-form-field>
@@ -220,15 +221,15 @@
           [disabled]="formGroup.invalid"
           (click)="clickHandler()"
         >
-          Run
+          Ubicar
         </button>
+        <!-- Toggle button  -->
+        <mat-slide-toggle color="primary" formControlName="bitsMode" (change)="toggleBitMode()">
+          Bits mode
+        </mat-slide-toggle>
       </form>
     </div>
   </div>
   <!-- End Form container -->
 
-  <!-- Toggle button  -->
-  <mat-slide-toggle color="primary" (change)="toggleBitMode()">
-    Bits mode
-  </mat-slide-toggle>
 </mat-card>

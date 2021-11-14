@@ -111,11 +111,31 @@ export class AnimeService {
 
   
   /**
-   * moves the target element to its original position
-   * @param {string} target - HTML selector for the target element of the animation
+   * Stops actions in the timeline for a determined ammount of time
+   * @param {string} time - How much will the timeline wait
    * @returns {void}
    */
-   wait(target: string) {
-    this._timeline;
+   wait(time: number) {
+    this._timeline.add({
+      delay: time
+    });
+  }
+
+  /**
+   * Rotates an object
+   * 
+   * @param {string} target the object
+   * @param {number} time how much time will it rotate
+   */
+  rotate(target: string, time: number): void {
+    this._timeline.add({
+      targets:target,
+      rotate: {
+        value: '+=1turn', // 0 + 2 = '2turn'
+        duration: time,
+        easing: 'easeInOutElastic'
+      }
+    });
+    this._timeline.play();
   }
 }
