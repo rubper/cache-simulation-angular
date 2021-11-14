@@ -11,6 +11,7 @@ import { HeaderService } from './header.service';
 })
 export class HeaderComponent extends BaseComponent implements OnInit {
   policies = cachePolicies;
+  mobileToggle = true;
   constructor(
     private readonly headerService: HeaderService
   ) {
