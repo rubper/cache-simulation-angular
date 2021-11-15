@@ -43,18 +43,18 @@ export class RequestComponent implements OnInit {
 
   requestData(valueRequested: string): string {
     console.log(this.log);
-    
+    let requestedDataIndex = -1;
     const requestedData = this.CacheMemory.find(
-      (value: string) => value === valueRequested
+      (value: string, index: number) => {requestedDataIndex = index; return value === valueRequested;}
     );
     if (requestedData) {
       console.log('cache hit');
       this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-200">Cache hit. ${requestedData}</div>`);
       if(this.substitutionInput.value === 'LRU') {
-        if(this.lruCounter[this.CacheMemory.indexOf(requestedData)]) {
-          this.lruCounter[this.CacheMemory.indexOf(requestedData)]++;
+        if(this.lruCounter[requestedDataIndex]) {
+          this.lruCounter[requestedDataIndex]++;
         } else {
-          this.lruCounter[this.CacheMemory.indexOf(requestedData)] = 1;
+          this.lruCounter[requestedDataIndex] = 1;
         }
       }
       return requestedData;
