@@ -46,31 +46,29 @@ export class PrefetchComponent implements OnInit {
 
   requestData(valueRequested: string): string {
     console.log(this.log);
-    
+    let requestedIndex = -1;
     const requestedData = this.CacheMemory.find(
-      (value: string) => value === valueRequested
+      (value: string, index:number) => {requestedIndex = index; return value === valueRequested;}
     );
-    const indexRequestedData = this.MainMemory.indexOf(requestedData||this.MainMemory[0]);
-    const indexCacheRequestedData = this.CacheMemory.indexOf(requestedData||this.CacheMemory[0]);
+    const indexMemory = this.MainMemory.indexOf(requestedData||this.MainMemory[0]);
     if (requestedData) {
       console.log('cache hit');
-      this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-200">Cache hit.</div>`);
+      this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-200">Cache hit. ${requestedData}</div>`);
       if(this.substitutionInput.value === 'LRU') {
         if(this.lruCounter[this.CacheMemory.indexOf(requestedData)]) {
           this.lruCounter[this.CacheMemory.indexOf(requestedData)]++;
-          this.lruCounter[this.CacheMemory.indexOf(requestedData)+1]++;
         } else {
           this.lruCounter[this.CacheMemory.indexOf(requestedData)] = 1;
           this.lruCounter[this.CacheMemory.indexOf(requestedData)+1] = 1;
         }
       }
-      this.CacheMemory[indexCacheRequestedData] = this.MainMemory[indexRequestedData+1];
+      this.CacheMemory[requestedIndex+1] = this.MainMemory[indexMemory+1];
 
       return requestedData;
     } else {
       console.log('cache miss');
-      this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-300">Cache miss.</div>`);
       const result = this.handleCacheMiss(valueRequested);
+      this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-300">Cache miss. ${result}</div>`);
       const resultIndex = this.MainMemory.indexOf(result);
       if (this.substitutionInput.value === 'random') {
         const randomIndex = Math.floor(Math.random() * (this.CacheMemoryLength - 1));

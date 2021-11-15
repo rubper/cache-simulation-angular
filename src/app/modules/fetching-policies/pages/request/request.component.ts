@@ -49,7 +49,7 @@ export class RequestComponent implements OnInit {
     );
     if (requestedData) {
       console.log('cache hit');
-      this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-200">Cache hit.</div>`);
+      this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-200">Cache hit. ${requestedData}</div>`);
       if(this.substitutionInput.value === 'LRU') {
         if(this.lruCounter[this.CacheMemory.indexOf(requestedData)]) {
           this.lruCounter[this.CacheMemory.indexOf(requestedData)]++;
@@ -60,8 +60,8 @@ export class RequestComponent implements OnInit {
       return requestedData;
     } else {
       console.log('cache miss');
-      this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-300">Cache miss.</div>`);
       const result = this.handleCacheMiss(valueRequested);
+      this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-300">Cache miss. ${result}</div>`);
       if (this.substitutionInput.value === 'random') {
         const randomIndex = Math.floor(Math.random() * (this.CacheMemoryLength - 1));
         this.CacheMemory[randomIndex] = result;
