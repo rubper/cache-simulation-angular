@@ -149,7 +149,7 @@ export class WriteWithAlocateComponent implements OnInit {
       this.pushLog( 'Nuevo valor del ' + this.celdasMP[this.bloqueSolicitado] + ': ' + this.nuevoValorBloqueSolicitado );
       // Actualización del valor luego de dos segundos
       setTimeout(() => {
-        this.pushLog('Actualizando valor en MC...');
+        this.pushLog('Actualizando valor del ' + this.celdasMP[this.bloqueSolicitado] + ' en MC...');
         this.updateDataCacheValue( this.nuevoValorBloqueSolicitado, this.bloqueSolicitado );
       }, 5000);
     }

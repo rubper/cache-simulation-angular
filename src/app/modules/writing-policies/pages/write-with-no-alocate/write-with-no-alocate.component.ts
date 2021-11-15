@@ -9,6 +9,7 @@ export class WriteWithNoAlocateComponent implements OnInit {
 
   play = false;
   icon = 'play_arrow';
+  falloEscrituraFlag = false;
   celdasMP: string[] = [];
   celdasMC: string[] = [];
   logs: string[] = [];
@@ -18,6 +19,7 @@ export class WriteWithNoAlocateComponent implements OnInit {
 
   direccionesEnMC: string[] = [];
   dataMC: string[] = [];
+  dirtyBit: number[] = [];
 
   celdaInput = true;
   bloqueSolicitado = 0;
@@ -85,7 +87,7 @@ export class WriteWithNoAlocateComponent implements OnInit {
     if ( this.play ) {
       setTimeout(() => {
         this.randomItem();
-      }, 5000);
+      }, 6000);
     }
   }
 
@@ -97,14 +99,10 @@ export class WriteWithNoAlocateComponent implements OnInit {
       this.getRandomItem();
     } else {
       this.addToCache(this.bloqueSolicitado);
-      // Generación de un nuevo valor de forma aleatoria
-      this.nuevoValorBloqueSolicitado = this.generateData(5);
-      this.pushLog( 'Nuevo valor del bloque: ' + this.nuevoValorBloqueSolicitado );
-      // Actualización del valor luego de dos segundos
+      this.generateNewValue();
       setTimeout(() => {
-        this.pushLog('Actualizando valor en MC y MP...');
-        this.updateDataValue( this.nuevoValorBloqueSolicitado, this.bloqueSolicitado );
-      }, 5000);
+        this.updateDataMainValue();
+      }, 6500);
     }
   }
 
@@ -113,11 +111,13 @@ export class WriteWithNoAlocateComponent implements OnInit {
       this.celdasMC.push(this.celdasMP[index]);
       this.direccionesEnMC.push(this.direccionesMP[index]);
       this.dataMC.push(this.dataMP[index]);
+      this.dirtyBit.push(0);
     } else {
       this.deleteFromCacheRandom();
       this.celdasMC.push(this.celdasMP[index]);
       this.direccionesEnMC.push(this.direccionesMP[index]);
       this.dataMC.push(this.dataMP[index]);
+      this.dirtyBit.push(0);
     }
   }
 
@@ -127,22 +127,66 @@ export class WriteWithNoAlocateComponent implements OnInit {
     this.celdasMC.splice(bloqueDelete, 1);
     this.direccionesEnMC.splice(bloqueDelete, 1);
     this.dataMC.splice(bloqueDelete, 1);
+    this.dirtyBit.splice(bloqueDelete, 1);
+  }
+
+  deleteFromCache( bloque: number ): void {
+    this.pushLog( this.celdasMC[bloque] + ' eliminado de caché...');
+    this.celdasMC.splice( bloque, 1 );
+    this.direccionesEnMC.splice( bloque, 1 );
+    this.dataMC.splice( bloque, 1 );
   }
 
   pushLog(comentario: string): void {
-    if ( this.logs.length <= 7 ) {
-      this.logs.push(comentario);
-    } else {
-      this.logs.splice(1, 1);
-      this.logs.push(comentario);
+    this.logs.push(comentario);
+  }
+
+  generateNewValue(): void {
+    const probabilidad = Math.random();
+    if ( probabilidad < 0.50 ) {
+      // Generación de un nuevo valor de forma aleatoria
+      this.nuevoValorBloqueSolicitado = this.generateData(5);
+      this.pushLog( 'Nuevo valor del ' + this.celdasMP[this.bloqueSolicitado] + ': ' + this.nuevoValorBloqueSolicitado );
+      // Actualización del valor luego de dos segundos
+      setTimeout(() => {
+        this.pushLog('Actualizando valor del ' + this.celdasMP[this.bloqueSolicitado] + ' en MC...');
+        this.updateDataCacheValue( this.nuevoValorBloqueSolicitado, this.bloqueSolicitado );
+      }, 5000);
     }
   }
 
-  updateDataValue( value: string, index: number ): void {
+  updateDataMainValue(): void {
+    if ( !this.falloEscrituraFlag ) {
+      this.getRandomItem();
+      const celdaMP = this.celdasMP[this.bloqueSolicitado];
+      const indexMC = this.celdasMC.indexOf(celdaMP, 0);
+      if ( this.dirtyBit[indexMC] === 1 ) {
+        this.pushLog('El dato del ' + this.celdasMP[this.bloqueSolicitado] + ' ha sido modificado...');
+        setTimeout(() => {
+          this.pushLog('Actualizando valor de ' + this.celdasMP[this.bloqueSolicitado] + ' en MP...');
+          this.dataMP[this.bloqueSolicitado] = this.nuevoValorBloqueSolicitado;
+        }, 2000);
+      } else {
+        this.pushLog('El dato del ' + this.celdasMP[this.bloqueSolicitado] + ' no ha sido modificado...');
+      }
+    } else {
+        setTimeout(() => {
+          this.pushLog('Actualizando el ' + this.celdasMP[this.bloqueSolicitado] + ' directamente en MP');
+          this.dataMP[this.bloqueSolicitado] = this.nuevoValorBloqueSolicitado;
+          this.falloEscrituraFlag = false;
+        }, 1000);
+    }
+  }
+
+  updateDataCacheValue( value: string, index: number ): void {
     const indexMC = this.dataMC.indexOf(this.dataMP[index], 0);
-    this.dataMC[indexMC] = value;
-    this.dataMP[index] = value;
-    this.getRandomItem();
+    if ( indexMC > -1 ) {
+      this.dataMC[indexMC] = value;
+      this.dirtyBit[indexMC] = 1;
+    } else {
+      this.pushLog('Fallo de escritura...');
+      this.falloEscrituraFlag = true;
+    }
   }
 
   playProcess(): void {
