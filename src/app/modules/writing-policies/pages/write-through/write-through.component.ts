@@ -99,10 +99,10 @@ export class WriteThroughComponent implements OnInit {
       this.addToCache(this.bloqueSolicitado);
       // Generación de un nuevo valor de forma aleatoria
       this.nuevoValorBloqueSolicitado = this.generateData(5);
-      this.pushLog( 'Nuevo valor del bloque: ' + this.nuevoValorBloqueSolicitado );
+      this.pushLog( 'Nuevo valor del ' + this.celdasMP[this.bloqueSolicitado] + ': ' + this.nuevoValorBloqueSolicitado );
       // Actualización del valor luego de dos segundos
       setTimeout(() => {
-        this.pushLog('Actualizando valor en MC y MP...');
+        this.pushLog('Actualizando valor del ' + this.celdasMP[this.bloqueSolicitado] + ' en MC y MP...');
         this.updateDataValue( this.nuevoValorBloqueSolicitado, this.bloqueSolicitado );
       }, 5000);
     }
@@ -130,12 +130,7 @@ export class WriteThroughComponent implements OnInit {
   }
 
   pushLog(comentario: string): void {
-    if ( this.logs.length <= 7 ) {
-      this.logs.push(comentario);
-    } else {
-      this.logs.splice(1, 1);
-      this.logs.push(comentario);
-    }
+    this.logs.push(comentario);
   }
 
   updateDataValue( value: string, index: number ): void {

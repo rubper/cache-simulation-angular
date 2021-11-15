@@ -106,16 +106,17 @@ export class WriteBackComponent implements OnInit {
   }
 
   addToCache(index: number): void {
-    this.dirtyBit.push(0);
     if (this.celdasMC.length <= 3) {
       this.celdasMC.push(this.celdasMP[index]);
       this.direccionesEnMC.push(this.direccionesMP[index]);
       this.dataMC.push(this.dataMP[index]);
+      this.dirtyBit.push(0);
     } else {
       this.deleteFromCacheRandom();
       this.celdasMC.push(this.celdasMP[index]);
       this.direccionesEnMC.push(this.direccionesMP[index]);
       this.dataMC.push(this.dataMP[index]);
+      this.dirtyBit.push(0);
     }
   }
 
@@ -125,15 +126,11 @@ export class WriteBackComponent implements OnInit {
     this.celdasMC.splice(bloqueDelete, 1);
     this.direccionesEnMC.splice(bloqueDelete, 1);
     this.dataMC.splice(bloqueDelete, 1);
+    this.dirtyBit.splice(bloqueDelete, 1);
   }
 
   pushLog(comentario: string): void {
-    if ( this.logs.length <= 7 ) {
-      this.logs.push(comentario);
-    } else {
-      this.logs.splice(1, 1);
-      this.logs.push(comentario);
-    }
+    this.logs.push(comentario);
   }
 
   generateNewValue(): void {
@@ -141,10 +138,10 @@ export class WriteBackComponent implements OnInit {
     if ( probabilidad < 0.50 ) {
       // Generación de un nuevo valor de forma aleatoria
       this.nuevoValorBloqueSolicitado = this.generateData(5);
-      this.pushLog( 'Nuevo valor del bloque: ' + this.nuevoValorBloqueSolicitado );
+      this.pushLog( 'Nuevo valor del ' + this.celdasMP[this.bloqueSolicitado] + ': ' + this.nuevoValorBloqueSolicitado );
       // Actualización del valor luego de dos segundos
       setTimeout(() => {
-        this.pushLog('Actualizando valor en MC...');
+        this.pushLog('Actualizando valor del ' + this.celdasMP[this.bloqueSolicitado] + ' en MC...');
         this.updateDataCacheValue( this.nuevoValorBloqueSolicitado, this.bloqueSolicitado );
       }, 5000);
     }
@@ -157,7 +154,7 @@ export class WriteBackComponent implements OnInit {
     if ( this.dirtyBit[indexMC] === 1 ) {
       this.pushLog('El dato del ' + this.celdasMP[this.bloqueSolicitado] + ' ha sido modificado...');
       setTimeout(() => {
-        this.pushLog('Actualizando valor en MP...');
+        this.pushLog('Actualizando valor del ' + this.celdasMP[this.bloqueSolicitado] + ' en MP...');
         this.dataMP[this.bloqueSolicitado] = this.nuevoValorBloqueSolicitado;
       }, 2000);
     } else {
