@@ -50,6 +50,8 @@ export class PrefetchComponent implements OnInit {
     const requestedData = this.CacheMemory.find(
       (value: string) => value === valueRequested
     );
+    const indexRequestedData = this.MainMemory.indexOf(requestedData||this.MainMemory[0]);
+    const indexCacheRequestedData = this.CacheMemory.indexOf(requestedData||this.CacheMemory[0]);
     if (requestedData) {
       console.log('cache hit');
       this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-200">Cache hit.</div>`);
@@ -62,6 +64,8 @@ export class PrefetchComponent implements OnInit {
           this.lruCounter[this.CacheMemory.indexOf(requestedData)+1] = 1;
         }
       }
+      this.CacheMemory[indexCacheRequestedData] = this.MainMemory[indexRequestedData+1];
+
       return requestedData;
     } else {
       console.log('cache miss');
