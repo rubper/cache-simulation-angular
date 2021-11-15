@@ -40,8 +40,8 @@ export class LandingComponent implements OnInit {
           title: 'Anticipacion',
         },
         {
-          name: 'selective',
-          title: 'Selectiva',
+          name: 'miss',
+          title: 'Anticipacion cuando se produce fallo',
         },
       ]
     },

@@ -14,7 +14,7 @@ const routes: Routes = [
     component: RequestComponent
   },
   {
-    path: 'selective',
+    path: 'miss',
     component: SelectiveComponent
   },
 ];

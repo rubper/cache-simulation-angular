@@ -41,14 +41,14 @@ export const cachePolicies: PolicyGroup[] = [
       },
       {
         name: 'prefetch',
-        DisplayName: 'Con anticipacion',
+        DisplayName: 'Con anticipacion siempre',
         description: '',
         type: 'fetching',
         icon: '',
       },
       {
-        name: 'selective',
-        DisplayName: 'Selectiva',
+        name: 'miss',
+        DisplayName: 'Con anticipacion cuando se produce un fallo',
         description: '',
         type: 'fetching',
         icon: '',
