@@ -34,7 +34,7 @@
       {{ tag }}
     </div>
     <div id="cache" class="inline" [ngClass]="litCache ? this.litColor : ''">
-      {{ cacheLine }}
+      {{ cacheSetId }}
     </div>
     <div id="word" class="inline" [ngClass]="litWord ? this.litColor : ''">
       {{ word }}
@@ -54,13 +54,13 @@
         {{ tag }}
       </div>
       <br /><br />
-      Linea en cache:
+      Conjunto de cache:
       <div
         (mouseover)="litCache = true"
         (mouseout)="litCache = false"
         class="inline"
       >
-        {{ cacheLine }}
+        {{ cacheSetId }}
       </div>
       <br /><br />
       Palabra:
@@ -76,14 +76,19 @@
     </div>
 
     Bloques en Memoria Principal: {{ memoryBlocks }} bloques
-    <br />
+    <br /><br />
     Bits de bloques de memoria principal {{ memoryBlocksBits }} bits
     <br /><br />
-    Lineas de cache: {{ cacheLines }} lineas
-    <br />
-    Bits de lineas de cache {{ cacheLinesBits }} bits <br /><br />
-    Ancho de etiquetas: {{ tagBits }} bits <br /><br />
-    Ancho de palabras: {{ configData.blocksize }} bits <br /><br />
+    Total lineas de cache {{ cacheLines }} lineas
+    <br /><br />
+    Lineas de cache por conjunto {{ linesPerSet }} lineas
+    <br /><br />
+    Numero de conjuntos de cache: {{ setsCount }} conjuntos
+    <br /><br />
+    Ancho de etiquetas: {{ tagBits }} bits 
+    <br /><br />
+    Ancho de palabras: {{ configData.blocksize }} bits 
+    <br /><br />
     <button mat-button #closeStepper></button>
   </mat-step>
 </mat-dialog-content>

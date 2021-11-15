@@ -1,6 +1,18 @@
 // angular core + reactive libs
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  AbstractControl,
+  FormControl,
+} from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 // material libs
@@ -15,7 +27,11 @@ import { BaseComponent } from '@shared/utils/base.component';
 import { lessThanMemoryField } from '@modules/mapping-policies/utils/validators/less-than-field.validator';
 
 // types
-import { ByteUnit, ByteUnits, UnitsDict } from '@modules/mapping-policies/utils/types/byte-unit.type';
+import {
+  ByteUnit,
+  ByteUnits,
+  UnitsDict,
+} from '@modules/mapping-policies/utils/types/byte-unit.type';
 import { Radix } from '@modules/mapping-policies/utils/types/radix.type';
 import { Position } from '@shared/types/position.type';
 
@@ -24,6 +40,7 @@ import { MathFn } from '@shared/lib/math.functions';
 
 // anime lib
 import { AnimeService } from '@animations/anime.service';
+import { ConfigData } from '@modules/mapping-policies/utils/types/config-data.type';
 
 // constants
 const STARTING_WORD_SIZE = 3;
@@ -31,9 +48,12 @@ const STARTING_WORD_SIZE = 3;
 @Component({
   selector: 'acs-set-associative',
   templateUrl: './set-associative.component.html',
-  styleUrls: ['./set-associative.component.css']
+  styleUrls: ['./set-associative.component.css'],
 })
-export class SetAssociativeComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class SetAssociativeComponent
+  extends BaseComponent
+  implements OnInit, AfterViewInit
+{
   // handles configs for display elements
   @ViewChild('memory') memoryDBlock: ElementRef | undefined;
   @ViewChild('cache') cacheDBlock: ElementRef | undefined;
@@ -41,7 +61,8 @@ export class SetAssociativeComponent extends BaseComponent implements OnInit, Af
 
   // handles data from config panel
   MemoryAddrSize?: ByteUnit;
-  CacheAddrSize?: ByteUnit;
+  CacheSetsData?: ByteUnit;
+  CacheWaysData?: ByteUnit;
   WordSize?: ByteUnit;
 
   // handles form
@@ -63,21 +84,18 @@ export class SetAssociativeComponent extends BaseComponent implements OnInit, Af
     super();
     // set form items
     this.ByteUnitsDict = [...UnitsDict];
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 3; i++) {
       this.bitSuggestionSet.add(Math.pow(2, i));
     }
-    this.bitSuggestionSet.add(10);
-    this.bitSuggestionSet.add(20);
-    this.bitSuggestionSet.add(30);
 
     // set the form itself
     this.formGroup = this.formBuilder.group({
       memSize: [null, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
       memTypeSize: ['B' as Radix], // BitsValidator(this.bitSuggestionSet)]],
-      cacheSize: [null, [Validators.required, lessThanMemoryField]], // BitsValidator(this.bitSuggestionSet)]],
-      cacheTypeSize: ['B' as Radix], // BitsValidator(this.bitSuggestionSet)]],
+      cacheSets: [8, [Validators.required, lessThanMemoryField]], // BitsValidator(this.bitSuggestionSet)]],
+      cacheWays: [2, [Validators.required]], // BitsValidator(this.bitSuggestionSet)]],
       wordSize: [STARTING_WORD_SIZE, [Validators.required]],
-      bitsMode: [false]
+      bitsMode: [false],
     });
 
     // do conversion of the blocksize
@@ -91,11 +109,11 @@ export class SetAssociativeComponent extends BaseComponent implements OnInit, Af
 
   ngOnInit(): void {
     this.MemorySizeType.valueChanges.subscribe((change) => {
-      this.CacheSize.updateValueAndValidity();
+      this.CacheSets.updateValueAndValidity();
+      this.CacheWays.updateValueAndValidity();
     });
-    this.CacheSizeType.valueChanges.subscribe((change) => {
-      this.CacheSize.updateValueAndValidity();
-    });
+    this.setCacheSets();
+    this.setCacheWays();
   }
 
   ngAfterViewInit(): void {}
@@ -104,7 +122,7 @@ export class SetAssociativeComponent extends BaseComponent implements OnInit, Af
     $event.preventDefault();
     $event.stopPropagation();
     // the animation to execute on submit
-    this.animeService.rotate('.square', 2000);  // moves #cache to x:-200, y:0, from its ORIGINAL position
+    this.animeService.rotate('.square', 2000); // moves #cache to x:-200, y:0, from its ORIGINAL position
   }
 
   setMemoryAddrSize(): void {
@@ -114,16 +132,37 @@ export class SetAssociativeComponent extends BaseComponent implements OnInit, Af
     );
   }
 
-  setCacheAddrSize(): void {
-    this.CacheAddrSize = this.handleConversionOnChange(
-      this.CacheSize,
-      this.CacheSizeType
-    );
+  setCacheSets(): void {
+    const mainValue = this.CacheSets.value;
+    // CASE OF RECEIVING BITS
+    this.bitSuggestionSet.add(mainValue);
+    const maxAddr = Math.pow(2, mainValue);
+
+    this.CacheSetsData = {
+      value: maxAddr,
+      readable: MathFn.getLowestIntegerByte(maxAddr),
+      unit: MathFn.getByteMultiple(maxAddr),
+      bits: Math.ceil(mainValue),
+    };
+  }
+
+  setCacheWays(): void {
+    const mainValue = this.CacheSets.value;
+    // CASE OF RECEIVING BITS
+    this.bitSuggestionSet.add(mainValue);
+    const maxAddr = Math.pow(2, mainValue);
+
+    this.CacheWaysData = {
+      value: maxAddr,
+      readable: MathFn.getLowestIntegerByte(maxAddr),
+      unit: MathFn.getByteMultiple(maxAddr),
+      bits: Math.ceil(mainValue),
+    };
   }
 
   handleConversionOnChange(
     mainControl: AbstractControl,
-    unitControl: AbstractControl
+    unitControl?: AbstractControl
   ): ByteUnit {
     const mainValue = mainControl.value;
     let controlVar: ByteUnit = {
@@ -140,7 +179,7 @@ export class SetAssociativeComponent extends BaseComponent implements OnInit, Af
         unit: MathFn.getByteMultiple(maxAddr),
         bits: Math.ceil(mainValue),
       };
-    } else {
+    } else if (unitControl) {
       // CASE OF RECEIVING MAX ADDRESSABLE
       if (
         !unitControl.pristine &&
@@ -183,18 +222,22 @@ export class SetAssociativeComponent extends BaseComponent implements OnInit, Af
       this.bitsMode.next(true);
     }
     this.setMemoryAddrSize();
-    this.setCacheAddrSize();
   }
 
   clickHandler() {
-    this.mainRef = this.matDialog.open(SetAssociativeDialogComponent, {
-      data: {
-        memory: this.MemoryAddrSize?.bits,
-        cache: this.CacheAddrSize?.bits,
-        blocksize: this.BlockSize.value,
-        _type: 's',
-      },
-    });
+    if(this.CacheSetsData && this.CacheWaysData && this.MemoryAddrSize) {
+      this.mainRef = this.matDialog.open(SetAssociativeDialogComponent, {
+        data: {
+          memory: this.MemoryAddrSize.bits?.toString(),
+          cache: {
+            sets: this.CacheSetsData,
+            ways: this.CacheWaysData,
+          },
+          blocksize: this.BlockSize.value,
+          _type: 's',
+        } as ConfigData,
+      });
+    }
   }
 
   // gets Main Memory square's instance
@@ -219,14 +262,15 @@ export class SetAssociativeComponent extends BaseComponent implements OnInit, Af
     );
   }
   // gets Cache form's controls
-  get CacheSize(): AbstractControl {
+  get CacheSets(): AbstractControl {
     return (
-      (this.formGroup.get('cacheSize') as FormControl) || new FormControl()
+      (this.formGroup.get('cacheSets') as FormControl) || new FormControl()
     );
   }
-  get CacheSizeType(): AbstractControl {
+  // gets Cache ways form's controls
+  get CacheWays(): AbstractControl {
     return (
-      (this.formGroup.get('cacheTypeSize') as FormControl) || new FormControl()
+      (this.formGroup.get('cacheWays') as FormControl) || new FormControl()
     );
   }
   // gets Cache form's controls
