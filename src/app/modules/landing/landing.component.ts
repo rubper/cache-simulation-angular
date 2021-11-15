@@ -32,11 +32,11 @@ export class LandingComponent implements OnInit {
       title: 'Extraccion',
       subLinks: [
         {
-          name: 'prefetch',
+          name: 'request',
           title: 'Demanda',
         },
         {
-          name: 'request',
+          name: 'prefetch',
           title: 'Anticipacion',
         },
         {

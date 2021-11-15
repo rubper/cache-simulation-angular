@@ -1,1 +1,24 @@
-<p>request works!</p>
+<mat-card class="m-8">
+  <h2>Extraccion por demanda</h2>
+  <div class="flex flex-column w-1/4">
+    <mat-form-field appearance="fill">
+      <mat-label>Datos en memoria</mat-label>
+      <mat-select [formControl]="dataInput" required #select>
+        <mat-option *ngFor="let address of MainMemory" [value]="address">{{address}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Politica de sustitucion</mat-label>
+      <mat-select [formControl]="substitutionInput" required #substitutionSelect>
+        <mat-option *ngFor="let option of lruOptions" [value]="option">{{option}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-flat-button (click)="requestData(select.value)">Solicitar dato</button>
+  </div>
+  <div class="w-3/4">
+      <mat-card>
+          <h3>Log</h3>
+          <div class="border rounded border-gray-200 p-2 m-2" #log></div>
+      </mat-card>
+  </div>
+</mat-card>
