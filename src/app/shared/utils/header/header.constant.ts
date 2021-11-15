@@ -33,14 +33,14 @@ export const cachePolicies: PolicyGroup[] = [
     DisplayName: 'Politicas de extraccion',
     policies: [
       {
-        name: 'prefetch',
+        name: 'request',
         DisplayName: 'Por demanda',
         description: '',
         type: 'fetching',
         icon: '',
       },
       {
-        name: 'request',
+        name: 'prefetch',
         DisplayName: 'Con anticipacion',
         description: '',
         type: 'fetching',

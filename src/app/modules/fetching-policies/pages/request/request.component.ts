@@ -50,6 +50,13 @@ export class RequestComponent implements OnInit {
     if (requestedData) {
       console.log('cache hit');
       this.log.nativeElement.insertAdjacentHTML('beforeend',`<div class="m-1 bg-red-200">Cache hit.</div>`);
+      if(this.substitutionInput.value === 'LRU') {
+        if(this.lruCounter[this.CacheMemory.indexOf(requestedData)]) {
+          this.lruCounter[this.CacheMemory.indexOf(requestedData)]++;
+        } else {
+          this.lruCounter[this.CacheMemory.indexOf(requestedData)] = 1;
+        }
+      }
       return requestedData;
     } else {
       console.log('cache miss');
@@ -73,8 +80,9 @@ export class RequestComponent implements OnInit {
         });
         const maxCountIndex = this.CacheMemory.indexOf(maxElement);
         this.CacheMemory[maxCountIndex] = result;
+        this.fifoCounter[maxCountIndex] = 0;
       } else if(this.substitutionInput.value === 'LRU') {
-        let minLruCounter = 0;
+        let minLruCounter = 1;
         let minElement = this.CacheMemory[0];
         this.CacheMemory.forEach((element:string, index: number) => {
           if(!this.lruCounter[index]) {
@@ -84,7 +92,6 @@ export class RequestComponent implements OnInit {
             minLruCounter = this.lruCounter[index];
             minElement = element;
           }
-          this.lruCounter[index]++;
         });
         const minCountIndex = this.CacheMemory.indexOf(minElement);
         this.CacheMemory[minCountIndex] = result;
